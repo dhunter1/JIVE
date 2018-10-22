@@ -1,0 +1,55 @@
+/* 
+ * This document is used to style the GUI's buttons and menu button.
+ * The background color of most components is set in the FXML file.
+ */
+
+/*Basic button styling */
+.button:hover {
+	-fx-scale-y: 1.05;
+	-fx-scale-x: 1.05;
+}
+
+.button:pressed {
+	-fx-scale-y: 1;
+	-fx-scale-x: 1;
+}
+
+/*Menu button styling */
+.menu-button:hover {
+	-fx-scale-y: 1.05;
+	-fx-scale-x: 1.05;
+}
+
+.menu-button:pressed {
+	-fx-scale-y: 1;
+	-fx-scale-x: 1;
+}
+
+.menu-button > .arrow-button {
+	-fx-padding: 0;
+}
+
+.menu-button > .arrow-button > .arrow {
+	-fx-padding: 0;
+}
+
+.menu-item {
+	-fx-background-color: black;
+	-fx-opacity: .9;
+}
+
+.menu-item .label {
+	-fx-background-color: black;
+	-fx-text-fill: #f2f2f2;
+	-fx-font-size: 16pt;
+}
+
+.menu-item:hover {
+	-fx-scale-y: 1.03;
+	-fx-scale-x: 1.03;
+}
+
+.context-menu {
+	-fx-background-color: black;
+	-fx-opacity: 0.9;
+}

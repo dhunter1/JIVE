@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainPane" prefHeight="648.0" prefWidth="1152.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jive.java.GUI">
+   <children>
+      <AnchorPane fx:id="viewerPane" layoutX="10.0" layoutY="72.0" prefHeight="478.0" prefWidth="1152.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="115.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="72.0" />
+      <AnchorPane fx:id="controlPane" layoutX="5.0" layoutY="-2.0" prefHeight="46.0" prefWidth="1117.0" style="-fx-background-color: black;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="46.0" prefWidth="328.0" style="-fx-background-color: black;" AnchorPane.rightAnchor="5.0">
+               <children>
+                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="187.0" textFill="#f2f2f2">
+                     <font>
+                        <Font name="Gill Sans MT" size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="5.0" right="10.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="sizeLabel" alignment="CENTER_RIGHT" prefHeight="44.0" prefWidth="90.0" textFill="#f2f2f2">
+                     <font>
+                        <Font name="Gill Sans MT" size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" right="5.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutY="1.0" prefHeight="46.0" prefWidth="254.0" style="-fx-background-color: black;" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <MenuButton fx:id="menuButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="72.0" style="-fx-background-color: black;">
+                    <items>
+                      <MenuItem fx:id="openFileItem" mnemonicParsing="false" onAction="#openFileAction" text="Open File" />
+                      <MenuItem fx:id="saveAsItem" mnemonicParsing="false" onAction="#saveAsAction" text="Save As" />
+                        <MenuItem fx:id="helpItem" mnemonicParsing="false" onAction="#helpAction" text="Help" />
+                    </items>
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="49.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/MenuIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuButton>
+                  <Button fx:id="saveButton" disable="true" mnemonicParsing="false" onAction="#saveButtonAction" prefHeight="94.0" prefWidth="166.0" style="-fx-background-color: black;">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="46.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/SaveIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="undoButton" disable="true" mnemonicParsing="false" onAction="#undoButtonAction" style="-fx-background-color: black;">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/UndoIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="redoButton" disable="true" mnemonicParsing="false" onAction="#redoButtonAction" prefHeight="51.0" prefWidth="76.0" style="-fx-background-color: black;">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/RedoIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <HBox alignment="CENTER" layoutX="5.0" layoutY="533.0" prefHeight="110.0" prefWidth="1107.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+         <children>
+            <Button fx:id="rotateRightButton" disable="true" mnemonicParsing="false" onAction="#rotateRightAction" prefHeight="85.0" prefWidth="85.0" style="-fx-background-color: black;">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/CwRotateIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Rotate Right" />
+               </tooltip>
+            </Button>
+            <Button fx:id="rotateLeftButton" disable="true" layoutX="501.0" layoutY="28.0" mnemonicParsing="false" onAction="#rotateLeftAction" prefHeight="85.0" prefWidth="85.0" style="-fx-background-color: black;">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/CcwRotateIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Rotate Left" />
+               </tooltip>
+            </Button>
+            <Button fx:id="flipHorizontalButton" disable="true" layoutX="569.0" layoutY="28.0" mnemonicParsing="false" onAction="#flipHorizontalAction" prefHeight="85.0" prefWidth="85.0" style="-fx-background-color: black;">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/HorizontalFlipIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Flip Horizontal" />
+               </tooltip>
+            </Button>
+            <Button fx:id="flipVerticalButton" disable="true" layoutX="631.0" layoutY="28.0" mnemonicParsing="false" onAction="#flipVerticalAction" prefHeight="85.0" prefWidth="85.0" style="-fx-background-color: black;">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/VerticalFlipIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Flip Vertical" />
+               </tooltip>
+            </Button>
+            <Button fx:id="cropButton" disable="true" layoutX="694.0" layoutY="28.0" mnemonicParsing="false" onAction="#cropAction" prefHeight="85.0" prefWidth="85.0" style="-fx-background-color: black;">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/CropIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Crop" />
+               </tooltip>
+            </Button>
+            <Button fx:id="resizeButton" disable="true" layoutX="756.0" layoutY="28.0" mnemonicParsing="false" onAction="#resizeAction" prefHeight="85.0" prefWidth="85.0" style="-fx-background-color: black;">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/ResizeIcon.png" />
+                     </image></ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Resize" />
+               </tooltip>
+            </Button>
+            <Button fx:id="editMetadataButton" disable="true" layoutX="851.0" layoutY="40.0" mnemonicParsing="false" onAction="#editMetadataAction" prefHeight="85.0" prefWidth="85.0" style="-fx-background-color: black;">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/MetadataIcon.png" />
+                     </image></ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Edit Metadata" />
+               </tooltip>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
