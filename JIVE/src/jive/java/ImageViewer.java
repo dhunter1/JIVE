@@ -11,7 +11,9 @@ import javafx.scene.layout.BorderPane;
  * The ImageView binding is updated dynamically during window resizing.
  * Image ratio is preserved during resizing.
  * 
- * @authors Devon Hunter, Craig Vandeventer, Casey Brown
+ * @author Devon Hunter
+ * @author Craig Vandeventer
+ * @author Casey Brown
  *
  */
 public class ImageViewer extends BorderPane
@@ -19,7 +21,8 @@ public class ImageViewer extends BorderPane
 	Image image;
 	ImageView imageView;
 	
-	ChangeListener<Number> resizeListener = (observable, oldValue, newValue) -> {					//Dynamically bind or unbind imageView's fit properties in response to window size
+	//The resizeListener dynamically binds or unbinds imageView's fit properties according to window size
+	ChangeListener<Number> resizeListener = (observable, oldValue, newValue) -> {
 		if (image != null)
 		{
 			if (image.getHeight() > this.getHeight() || image.getWidth() > this.getWidth())

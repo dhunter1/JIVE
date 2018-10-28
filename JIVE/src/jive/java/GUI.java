@@ -2,7 +2,7 @@ package jive.java;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,20 +12,21 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-//TODO: Enable save button automatically if there are unsaved changes
-
 /**
  * This class is the controller class for the JIVE GUI.
  * 
- * It is responsible for handling user input and coordinating ImageViewer and ImageEditor functions.
+ * It is responsible for handling user input and coordinating image viewing and editing functions.
  * 
- * @authors Devon Hunter, Craig Vandeventer, Casey Brown
+ * @author Devon Hunter
+ * @author Craig Vandeventer
+ * @author Casey Brown
  *
  */
 public class GUI
@@ -34,13 +35,16 @@ public class GUI
 	
 	Stage stage;
 	ImageViewer imageViewer;
-	ImageEditor imageEditor;
+	Project project;
 	
 	@FXML
 	private AnchorPane mainPane;
 	
 	@FXML
 	private AnchorPane viewerPane;
+	
+	@FXML
+	private MenuItem saveAsItem;
 	
 	@FXML
 	private Button saveButton;
@@ -80,7 +84,6 @@ public class GUI
 	
 	public void initialize()
 	{		
-		imageEditor = new ImageEditor();
 		imageViewer = new ImageViewer();
 		viewerPane.getChildren().add(imageViewer);
 		
@@ -112,31 +115,22 @@ public class GUI
 	
 	@FXML void saveButtonAction() 
 	{
-		imageEditor.save();
+		project.save();
 		saveButton.setDisable(true);
 	}
 	
 	@FXML void undoButtonAction() 
 	{
-		BufferedImage image = imageEditor.undo();
+		BufferedImage image = project.undo();
 		imageViewer.update(SwingFXUtils.toFXImage(image, null));
-		
-		if (imageEditor.stateHistoryIsEmpty())
-		{
-			undoButton.setDisable(true);
-			saveButton.setDisable(true);
-			imageEditor.setHasUnsavedChanges(false);
-		}
+		updateGUI();
 	}
 	
 	@FXML void redoButtonAction() 
 	{
-		BufferedImage image = imageEditor.undo();
+		BufferedImage image = project.undo();
 		imageViewer.update(SwingFXUtils.toFXImage(image, null));
-		imageEditor.setHasUnsavedChanges(true);
-		
-		if (imageEditor.undoHistoryIsEmpty())
-			redoButton.setDisable(true);
+		updateGUI();
 	}
 	
 	//TODO:
@@ -195,7 +189,7 @@ public class GUI
 		{
 			Image image;
 			
-			String fileName = imageFile.getName();																//Users can enter non-image files manually, so additional validation is done here
+			String fileName = imageFile.getName();							//Users can enter non-image files manually, so additional validation is done here
 			int extensionIndex = fileName.lastIndexOf(".");
 			String extension = fileName.substring(extensionIndex + 1);
 			
@@ -214,13 +208,12 @@ public class GUI
 			{
 				image = new Image(imageFile.toURI().toURL().toExternalForm());
 				imageViewer.update(image);
-				imageEditor.newProject(imageFile);																//Should handle failure of this graphically
-				nameLabel.setText(imageFile.getName());
-				sizeLabel.setText((int)image.getWidth() + " x " + (int)image.getHeight());
-			} 
-			catch (MalformedURLException e)
+				project = new Project(imageFile);				
+				updateGUI();
+			}
+			catch (IOException e)
 			{
-				//TODO: should handle exception graphically also
+				// TODO: Graphically handle failure
 				e.printStackTrace();
 			}
 			
@@ -234,7 +227,39 @@ public class GUI
 		}
 	}
 	
-	/*
+	/**
+	 * This function updates the labels and buttons as appropriate
+	 * It should be called after any change is made to the GUI, Project, or ImageViewer
+	 */
+	public void updateGUI()
+	{
+		sizeLabel.setText(project.getWidth() + " x " + project.getHeight());
+		
+		if (project.hasUnsavedChanges())
+		{
+			saveButton.setDisable(false);
+			saveAsItem.setDisable(false);
+			nameLabel.setText(project.getName() + "*");
+		}
+		else
+		{
+			saveButton.setDisable(true);
+			saveAsItem.setDisable(true);
+			nameLabel.setText(project.getName());
+		}
+		
+		if (project.stateHistoryIsEmpty())
+			undoButton.setDisable(true);
+		else
+			undoButton.setDisable(false);
+		
+		if (project.undoHistoryIsEmpty())
+			redoButton.setDisable(true);
+		else
+			redoButton.setDisable(false);
+	}
+	
+	/**
 	 * This function is used to set a reference to the stage from the Main class
 	 */
 	public void setStage(Stage stage)

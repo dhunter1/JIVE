@@ -38,7 +38,7 @@
                   <MenuButton fx:id="menuButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="72.0" style="-fx-background-color: black;">
                     <items>
                       <MenuItem fx:id="openFileItem" mnemonicParsing="false" onAction="#openFileAction" text="Open File" />
-                      <MenuItem fx:id="saveAsItem" mnemonicParsing="false" onAction="#saveAsAction" text="Save As" />
+                      <MenuItem fx:id="saveAsItem" disable="true" mnemonicParsing="false" onAction="#saveAsAction" text="Save As" />
                         <MenuItem fx:id="helpItem" mnemonicParsing="false" onAction="#helpAction" text="Help" />
                     </items>
                      <HBox.margin>

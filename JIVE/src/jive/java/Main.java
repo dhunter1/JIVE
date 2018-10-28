@@ -4,12 +4,15 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
  * This class is the entry-point of the Java Image Viewer and Editor application
  * 
- * @authors Devon Hunter, Craig Vandeventer, Casey Brown
+ * @author Devon Hunter
+ * @author Craig Vandeventer
+ * @author Casey Brown
  *
  */
 public class Main extends Application {
@@ -22,7 +25,9 @@ public class Main extends Application {
 			GUI gui = (GUI) loader.getController();
 			gui.setStage(primaryStage);					//Controller class needs reference to Stage for fileChooser			
 			Scene scene = new Scene(root);
-			scene.getStylesheets().add(getClass().getResource("/jive/resources/application.css").toExternalForm());			
+			scene.getStylesheets().add(getClass().getResource("/jive/resources/application.css").toExternalForm());	
+			primaryStage.setTitle("JIVE");
+			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/jive/resources/icons/JiveIcon.png")));
 			primaryStage.setScene(scene);
 			primaryStage.setMinWidth(800);
 			primaryStage.setMinHeight(250);

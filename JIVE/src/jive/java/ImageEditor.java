@@ -1,133 +1,76 @@
 package jive.java;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Stack;
 
-import javax.imageio.ImageIO;
+//TODO: implement all the functions
 
 /**
- * ImageEditor consists of methods to edit BufferedImage objects and manage editing projects.
+ * ImageEditor encompasses all image editing functions. 
+ * The functions operate on the bufferedImage attribute and return edited BufferedImage objects
  * 
- * Image editing functions are extended from the ToolKit class.
- * All editing functions return a newly-edited BufferedImage object.
- * 
- * Edited images can be saved to file or converted to different raster file formats.
- * 
- * Undo and redo functionality can be implemented using the stateHistory and undoHistory
- * variables to store BufferedImage objects in memory until a new project is opened or
- * the ImageEditor instance is destroyed.
- * 
- * @authors Devon Hunter, Craig Vandeventer, Casey Brown
+ * @author Devon Hunter
+ * @author Craig Vandeventer
+ * @author Casey Brown
  *
  */
-public class ImageEditor extends ToolKit
+public class ImageEditor
 {
-	private File imageFile;
-	private BufferedImage bufferedImage;
-	private Stack<BufferedImage> stateHistory = new Stack<BufferedImage>();
-	private Stack<BufferedImage> undoHistory = new Stack<BufferedImage>();
+	protected BufferedImage bufferedImage;
 	
-	boolean hasUnsavedChanges = false;
-	
-	//TODO: implement this function
-	public boolean save()
+	public ImageEditor(BufferedImage image)
 	{
-		//write buffered image to file
-		//hasUnsavedChanges = false;
-		//if successful
-		return true;
+		bufferedImage = image;
 	}
 	
-	//TODO: implement this function
-	public boolean saveAs(String fileName, String fileType)
+	public BufferedImage rotateRight()
 	{
-		//save buffered image as a specified file type
-		//hasUnsavedChanges = false;
-		//if successful
-		return true;
+		return null;
 	}
 	
-	/*
-	 * This method reverts the bufferedImage object to its previous state.
-	 * @return A javaFX Image of the previous state
-	 */
-	public BufferedImage undo()
+	public BufferedImage rotateLeft()
 	{
-		undoHistory.push(bufferedImage);
-		bufferedImage = stateHistory.pop();									//Revert bufferedImage to previous state
-		return bufferedImage;
+		return null;
 	}
 	
-	/*
-	 * This method reverts the bufferedImage object to its previous state.
-	 * @return A javaFX Image of the previous state
-	 */
-	public BufferedImage redo()
+	public BufferedImage flipHorizontal()
 	{
-		bufferedImage = undoHistory.pop();
-		return bufferedImage;
+		return null;
+	}
+	
+	public BufferedImage flipVertical()
+	{
+		return null;
+	}
+	
+	public BufferedImage crop(int x, int y)
+	{
+		//Need to calculate target width/height and call bufferedImage.getSubImage()
+		return null;
+	}
+	
+	public BufferedImage resize(double percentage)
+	{
+		return null;
+	}
+	
+	public BufferedImage editMetadata()
+	{
+		return null;
 	}
 	
 	/**
-	 * Creates a new project with the supplied file.
-	 * State and undo history is cleared and the BufferedImage object is updated to reflect the new file.
-	 * @param file A File object containing the picture to be edited. Must be .jpg, .png, .bmp, or .gif.
-	 * @return True if successful, false otherwise.
+	 * @return The height of the class's BufferedImage attribute
 	 */
-	public boolean newProject(File file)
+	public int getHeight()
 	{
-		imageFile = file;
-		stateHistory.clear();
-		undoHistory.clear();
-		
-		try
-		{
-			bufferedImage = ImageIO.read(imageFile);
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-
-		return true;
+		return bufferedImage.getHeight();
 	}
 	
 	/**
-	 * Pushes the ImageEditor's current BufferedImage object onto a stack of previous states.
-	 * This method should be called before every editing function for undo/redo functionality.
+	 * @return The width of the class's BufferedImage attribute
 	 */
-	public void storeState()
+	public int getWidth()
 	{
-		stateHistory.push(bufferedImage);
-	}
-	
-	/**
-	 * Checks if there are BufferedImage objects in the undoHistory stack
-	 * @return True if the stack is empty, false otherwise.
-	 */
-	public boolean undoHistoryIsEmpty()
-	{
-		return undoHistory.isEmpty();
-	}
-	
-	/**
-	 * Checks if there are BufferedImage objects in the stateHistory stack
-	 * @return True if the stack is empty, false otherwise.
-	 */
-	public boolean stateHistoryIsEmpty()
-	{
-		return stateHistory.isEmpty();
-	}
-	
-	/**
-	 * Toggle the hasUnsavedChanges variable
-	 * @param unsavedChanges
-	 */
-	public void setHasUnsavedChanges(boolean unsavedChanges)
-	{
-		hasUnsavedChanges = unsavedChanges;
+		return bufferedImage.getWidth();
 	}
 }
