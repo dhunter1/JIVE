@@ -7,6 +7,9 @@ import java.util.Stack;
 
 import javax.imageio.ImageIO;
 
+//TODO: Large BufferedImages use a lot of memory (7680 x 1200 is about 36mb), it might be better to store editing history as strings
+//		or limit undo/redo to some number of actions.
+
 /**
  * Project consists of methods to edit BufferedImage objects and manage editing projects.
  * 
@@ -32,7 +35,7 @@ public class Project extends ImageEditor
 	private boolean hasUnsavedChanges;
 	
 	/**
-	 * Resets state history, undo history, and unsaved changes
+	 * Initializes state history, undo history, and hasUnsavedChanges
 	 * @param A File object of the image to create a project from
 	 */
 	public Project(File imageFile) throws IOException
@@ -69,10 +72,9 @@ public class Project extends ImageEditor
 	 */
 	public BufferedImage undo()
 	{
-//		undoHistory.push(bufferedImage);
-//		bufferedImage = stateHistory.pop();									//Revert bufferedImage to previous state
-//		return bufferedImage;
-		return null;
+		undoHistory.push(bufferedImage);
+		bufferedImage = stateHistory.pop();
+		return bufferedImage;
 	}
 	
 	/**
@@ -81,9 +83,9 @@ public class Project extends ImageEditor
 	 */
 	public BufferedImage redo()
 	{
-//		bufferedImage = undoHistory.pop();
-//		return bufferedImage;
-		return null;
+		stateHistory.push(bufferedImage);
+		bufferedImage = undoHistory.pop();
+		return bufferedImage;
 	}
 	
 	/**

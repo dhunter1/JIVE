@@ -123,38 +123,52 @@ public class GUI
 	{
 		BufferedImage image = project.undo();
 		imageViewer.update(SwingFXUtils.toFXImage(image, null));
+		project.setHasUnsavedChanges(true);
 		updateGUI();
 	}
 	
 	@FXML void redoButtonAction() 
 	{
-		BufferedImage image = project.undo();
+		BufferedImage image = project.redo();
 		imageViewer.update(SwingFXUtils.toFXImage(image, null));
+		project.setHasUnsavedChanges(true);
 		updateGUI();
 	}
 	
-	//TODO:
 	@FXML void rotateRightAction() 
 	{
-		
+		project.storeState();
+		BufferedImage newImage = project.rotateRight();
+		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
+		project.setHasUnsavedChanges(true);
+		updateGUI();
 	}
 	
-	//TODO:
 	@FXML void rotateLeftAction() 
 	{
-		
+		project.storeState();
+		BufferedImage newImage = project.rotateLeft();
+		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
+		project.setHasUnsavedChanges(true);
+		updateGUI();
 	}
 	
-	//TODO:
 	@FXML void flipHorizontalAction() 
 	{
-		
+		project.storeState();
+		BufferedImage newImage = project.flipHorizontal();
+		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
+		project.setHasUnsavedChanges(true);
+		updateGUI();
 	}
 	
-	//TODO:
 	@FXML void flipVerticalAction() 
 	{
-		
+		project.storeState();
+		BufferedImage newImage = project.flipVertical();
+		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
+		project.setHasUnsavedChanges(true);
+		updateGUI();
 	}
 	
 	//TODO:
@@ -176,7 +190,7 @@ public class GUI
 	}
 		
 	/*
-	 * This method opens a user-selected image file for viewing and editing
+	 * This function opens a user-selected image file for viewing and editing
 	 */
 	public void openFile()
 	{
@@ -260,7 +274,7 @@ public class GUI
 	}
 	
 	/**
-	 * This function is used to set a reference to the stage from the Main class
+	 * This method is used to set a reference to the stage from the Main class
 	 */
 	public void setStage(Stage stage)
 	{
