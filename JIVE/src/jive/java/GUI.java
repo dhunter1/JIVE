@@ -98,14 +98,26 @@ public class GUI
 		openFile();
 	}
 	
-	//TODO:
+	//TODO: Add a dropdown menu to select file extension from valid list
 	@FXML void saveAsAction() 
 	{
-		//Not sure how to do this
-		//Need to get file name and type from user
-		//then call imageEditor.saveAs(fileName, fileType)?
+  		TextInputDialog dialog = new TextInputDialog();
+  		dialog.setTitle("File Name");
+ 		dialog.getDialogPane().setContentText("Input new file name, including extension and path: ");
+ 		dialog.initOwner(area.getValue().getScene().getWindow());
+		TextField tf = dialog.getEditor();
+		String newFileName = tf.getText();
+		project.saveAs(newFileName,newFileName.substring(newFileName.lastIndexOf(".")));
+		
 	}
-	
+	public String getFileExtension(File file) {
+    		String name = file.getName();
+    		int lastIndexOf = name.lastIndexOf(".");
+    		if (lastIndexOf == -1) {
+        		return ""; // empty extension
+    		}
+    		return name.substring(lastIndexOf);
+	}
 	//TODO:
 	@FXML void helpAction() 
 	{
