@@ -51,19 +51,35 @@ public class Project extends ImageEditor
 	//TODO: implement this function
 	public boolean save()
 	{
-		//write buffered image to file
-		//hasUnsavedChanges = false;
-		//if successful
-		return true;
+		try{
+			ImageIO.write(stateHistory.peek(),getFileExtension(imageFile),imageFile);
+			hasUnsavedChanges=false;
+			return true;
+		}
+		catch(Exception e){
+		}
+	}
+	public String getFileExtension(File file) {
+   		String name = file.getName();
+    		int lastIndexOf = name.lastIndexOf(".");
+   		if (lastIndexOf == -1) {
+        		return ""; // empty extension
+    		}
+    		return name.substring(lastIndexOf);
 	}
 	
 	//TODO: implement this function
 	public boolean saveAs(String fileName, String fileType)
 	{
-		//save buffered image as a specified file type
-		//hasUnsavedChanges = false;
-		//if successful
-		return true;
+		try{
+			imageFile=new File(fileName);
+			ImageIO.write(stateHistory.peek(),fileType,imageFile);
+			hasUnsavedChanges=false;
+			return true;
+		}
+		catch(Exception e){
+		}
+		
 	}
 	
 	/**
