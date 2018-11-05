@@ -1,5 +1,6 @@
 package jive.java;
 
+import java.awt.TextField;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -13,10 +14,12 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 /**
@@ -31,7 +34,7 @@ import javafx.stage.Stage;
  */
 public class GUI
 {	
-	final List<String> COMPATIBLE_FORMATS = Arrays.asList("jpg", "png", "bmp", "gif");
+	final List<String> COMPATIBLE_FORMATS = Arrays.asList("JPG","PNG","GIF","jpg", "png","gif");
 	
 	Stage stage;
 	ImageViewer imageViewer;
@@ -98,16 +101,21 @@ public class GUI
 		openFile();
 	}
 	
-	//TODO: Add a dropdown menu to select file extension from valid list
 	@FXML void saveAsAction() 
 	{
-  		TextInputDialog dialog = new TextInputDialog();
-  		dialog.setTitle("File Name");
- 		dialog.getDialogPane().setContentText("Input new file name, including extension and path: ");
- 		dialog.initOwner(area.getValue().getScene().getWindow());
-		TextField tf = dialog.getEditor();
-		String newFileName = tf.getText();
-		project.saveAs(newFileName,newFileName.substring(newFileName.lastIndexOf(".")));
+  		FileChooser fileSaver = new FileChooser();
+  		fileSaver.setTitle("Specify a file to save");
+  		fileSaver.getExtensionFilters().addAll(
+  		        new ExtensionFilter("jpg","*.jpg"),
+  				new ExtensionFilter("png","*.png"),
+  				//new ExtensionFilter("bmp","*.bmp"),
+  				new ExtensionFilter("gif","*.gif"));
+  		File newFile = fileSaver.showSaveDialog(stage);
+  		if(newFile!=null) {
+  			project.saveAs(newFile);
+  		}
+  		updateGUI();
+  			
 		
 	}
 	//TODO:
@@ -121,6 +129,7 @@ public class GUI
 	{
 		project.save();
 		saveButton.setDisable(true);
+		updateGUI();
 	}
 	
 	@FXML void undoButtonAction() 
@@ -262,7 +271,7 @@ public class GUI
 		else
 		{
 			saveButton.setDisable(true);
-			saveAsItem.setDisable(true);
+			saveAsItem.setDisable(false);
 			nameLabel.setText(project.getName());
 		}
 		
