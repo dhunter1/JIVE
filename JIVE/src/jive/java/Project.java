@@ -1,6 +1,8 @@
 package jive.java;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.Stack;
@@ -17,6 +19,7 @@ import javax.imageio.ImageIO;
  * All editing functions return a newly-edited BufferedImage object.
  * 
  * Edited images can be saved to file or converted to different raster file formats.
+ * Image saving functions use  ImageIO.write().
  * 
  * Undo and redo functionality can be implemented using the stateHistory and undoHistory
  * variables to store BufferedImage objects in memory until a new project is opened or
@@ -48,23 +51,97 @@ public class Project extends ImageEditor
 		hasUnsavedChanges = false;
 	}
 	
-	//TODO: implement this function
+	
 	public boolean save()
 	{
-		//write buffered image to file
-		//hasUnsavedChanges = false;
-		//if successful
-		return true;
+		try{
+			ImageIO.write(bufferedImage,getFileExtension(imageFile),imageFile);
+			hasUnsavedChanges=false;
+			return true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public String getFileExtension(File file) {
+   		String name = file.getName();
+    		int lastIndexOf = name.lastIndexOf(".");
+   		if (lastIndexOf == -1) {
+        		return ""; // empty extension
+    		}
+    		return name.substring(lastIndexOf+1);
 	}
 	
-	//TODO: implement this function
-	public boolean saveAs(String fileName, String fileType)
+
+	public boolean saveAs(File newFile)
 	{
-		//save buffered image as a specified file type
-		//hasUnsavedChanges = false;
-		//if successful
-		return true;
+		try{
+			//imageFile=new File(fileName);
+			if(getFileExtension(newFile)=="JPG" || getFileExtension(newFile)=="jpg") {
+				// create a blank, RGB, same width and height, and a white background
+				BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
+				bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+				newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
+				//if (newBufferedImage.getColorModel().hasAlpha()) {
+				//	newBufferedImage = dropAlphaChannel(newBufferedImage);
+				//}
+  				ImageIO.write(newBufferedImage, "jpg", newFile);
+  				imageFile=newFile;
+				//bufferedImage=convertColorspace(bufferedImage,BufferedImage.TYPE_INT_RGB);
+					
+  			}
+			if(getFileExtension(newFile)=="BMP" || getFileExtension(newFile)=="bmp") {
+				BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
+				bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+				newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
+		  		ImageIO.write(newBufferedImage, "bmp", newFile);
+		  		imageFile=newFile;
+			
+			}
+			
+			else {
+			
+				ImageIO.write(bufferedImage,getFileExtension(newFile),newFile);
+				imageFile=newFile;
+			}
+			hasUnsavedChanges=false;
+			return true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return false;
+		
 	}
+	
+	public BufferedImage dropAlphaChannel(BufferedImage src) {
+	     BufferedImage convertedImg = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
+	     convertedImg.getGraphics().drawImage(src, 0, 0, null);
+
+	     return convertedImg;
+	}
+	
+	final public static BufferedImage convertColorspace(
+			BufferedImage image,
+			int newType) {
+			 
+			try {
+			BufferedImage raw_image = image;
+			image =
+			new BufferedImage(
+			raw_image.getWidth(),
+			raw_image.getHeight(),
+			newType);
+			ColorConvertOp xformOp = new ColorConvertOp(null);
+			xformOp.filter(raw_image, image);
+			} catch (Exception e) {
+			//LogWriter.writeLog("Exception " + e + " converting image");
+				e.printStackTrace();
+			}
+			 
+			return image;
+			}
 	
 	/**
 	 * This method reverts the bufferedImage object to its previous state.
