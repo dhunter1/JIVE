@@ -31,54 +31,40 @@ import javafx.stage.Stage;
  */
 public class GUI
 {	
-	final List<String> COMPATIBLE_FORMATS = Arrays.asList("jpg", "png", "bmp", "gif");
+	final List<String> COMPATIBLE_FORMATS = Arrays.asList("*.jpg", "*.png", "*.bmp", "*.gif");
 	
 	Stage stage;
 	ImageViewer imageViewer;
 	Project project;
 	
 	@FXML
-	private AnchorPane mainPane;
-	
+	private AnchorPane mainPane;	
 	@FXML
 	private AnchorPane viewerPane;
-	
 	@FXML
 	private MenuItem saveAsItem;
-	
 	@FXML
 	private Button saveButton;
-	
 	@FXML
 	private Button undoButton;
-	
 	@FXML
 	private Button redoButton;
-	
 	@FXML
 	private Button rotateRightButton;
-	
 	@FXML
 	private Button rotateLeftButton;
-	
 	@FXML
 	private Button flipHorizontalButton;
-	
 	@FXML
 	private Button flipVerticalButton;
-	
 	@FXML
 	private Button cropButton;
-	
 	@FXML
 	private Button resizeButton;
-	
 	@FXML
 	private Button editMetadataButton;
-	
 	@FXML
 	private Label nameLabel;
-	
 	@FXML
 	private Label sizeLabel;
 	
@@ -87,7 +73,7 @@ public class GUI
 		imageViewer = new ImageViewer();
 		viewerPane.getChildren().add(imageViewer);
 		
-		AnchorPane.setTopAnchor(imageViewer, 0.0);			//Anchor the imageViewer node to the viewerPane to resize the imageViewer with the stage
+		AnchorPane.setTopAnchor(imageViewer, 0.0);		//Anchor the imageViewer node to the viewerPane to resize the imageViewer with the stage
 		AnchorPane.setRightAnchor(imageViewer, 0.0);
 		AnchorPane.setLeftAnchor(imageViewer, 0.0);
 		AnchorPane.setBottomAnchor(imageViewer, 0.0);
@@ -98,12 +84,37 @@ public class GUI
 		openFile();
 	}
 	
-	//TODO:
 	@FXML void saveAsAction() 
 	{
-		//Not sure how to do this
-		//Need to get file name and type from user
-		//then call imageEditor.saveAs(fileName, fileType)?
+		String currFileExt = "*." + project.getFileExtension();
+		FileChooser fileChooser = new FileChooser();
+		
+		FileChooser.ExtensionFilter filter;	//Filters appear in the order they are added, so the current extension is added first
+		filter = new FileChooser.ExtensionFilter(currFileExt, currFileExt);
+		fileChooser.getExtensionFilters().add(filter);
+		
+		for (String ext : COMPATIBLE_FORMATS)
+		{
+			if (!ext.equals(currFileExt))
+			{
+				filter = new FileChooser.ExtensionFilter(ext, ext);
+				fileChooser.getExtensionFilters().add(filter);
+			}
+		}
+		
+		fileChooser.setTitle("JIVE - Save As");
+		fileChooser.setInitialFileName(project.getName());
+		
+		File savedFile = fileChooser.showSaveDialog(stage);
+		
+		if (savedFile != null)
+		{	
+			if (project.saveAs(savedFile))
+				updateGUI();
+			else
+				createAlert("Error: could not save image");
+		}
+		
 	}
 	
 	//TODO:
@@ -115,8 +126,10 @@ public class GUI
 	
 	@FXML void saveButtonAction() 
 	{
-		project.save();
-		saveButton.setDisable(true);
+		if (project.save())
+			updateGUI();
+		else
+			createAlert("Error: could not save image");
 	}
 	
 	@FXML void undoButtonAction() 
@@ -192,29 +205,33 @@ public class GUI
 	/*
 	 * This function opens a user-selected image file for viewing and editing
 	 */
-	public void openFile()
+	private void openFile()
 	{
 		FileChooser fileChooser = new FileChooser();
-		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png", "*.bmp", "*.gif");
+		
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Image Files", COMPATIBLE_FORMATS);
 		fileChooser.getExtensionFilters().add(filter);
-		File imageFile = fileChooser.showOpenDialog(stage);
+		
+		for (String ext : COMPATIBLE_FORMATS)
+		{
+			filter = new FileChooser.ExtensionFilter(ext, ext);
+			fileChooser.getExtensionFilters().add(filter);
+		}
+		
+		fileChooser.setTitle("JIVE - Open an Image");
+		File imageFile = fileChooser.showOpenDialog(stage);		//This could be improved to open in the Pictures directory
 				
 		if (imageFile != null)
 		{
 			Image image;
 			
-			String fileName = imageFile.getName();							//Users can enter non-image files manually, so additional validation is done here
+			String fileName = imageFile.getName();				//Users can enter non-image files manually, so additional validation is done here
 			int extensionIndex = fileName.lastIndexOf(".");
 			String extension = fileName.substring(extensionIndex + 1);
 			
-			if (!(COMPATIBLE_FORMATS.contains(extension)))
+			if (!(COMPATIBLE_FORMATS.contains("*." + extension)))
 			{
-				Alert alert = new Alert(AlertType.ERROR, "JIVE does not support ." + extension + " files.");	//This could be improved to look more modern
-				alert.setHeaderText(null);
-				GaussianBlur blur = new GaussianBlur(5);
-				mainPane.setEffect(blur);
-				alert.showAndWait();
-				mainPane.setEffect(null);
+				createAlert("JIVE does not support ." + extension + " files.");
 				return;
 			}
 			
@@ -227,10 +244,14 @@ public class GUI
 			}
 			catch (IOException e)
 			{
-				// TODO: Graphically handle failure
 				e.printStackTrace();
+				imageViewer.update(null);
+				project = null;
+				createAlert("Error: could not read image file.");
+				return;				
 			}
 			
+			saveAsItem.setDisable(false);
 			rotateRightButton.setDisable(false);
 			rotateLeftButton.setDisable(false);
 			flipHorizontalButton.setDisable(false);
@@ -242,23 +263,21 @@ public class GUI
 	}
 	
 	/**
-	 * This function updates the labels and buttons as appropriate
+	 * This function updates the GUI's labels and buttons as appropriate
 	 * It should be called after any change is made to the GUI, Project, or ImageViewer
 	 */
-	public void updateGUI()
+	private void updateGUI()
 	{
 		sizeLabel.setText(project.getWidth() + " x " + project.getHeight());
 		
 		if (project.hasUnsavedChanges())
 		{
 			saveButton.setDisable(false);
-			saveAsItem.setDisable(false);
 			nameLabel.setText(project.getName() + "*");
 		}
 		else
 		{
 			saveButton.setDisable(true);
-			saveAsItem.setDisable(true);
 			nameLabel.setText(project.getName());
 		}
 		
@@ -271,6 +290,20 @@ public class GUI
 			redoButton.setDisable(true);
 		else
 			redoButton.setDisable(false);
+	}
+	
+	/**
+	 * Shows an alert in the GUI
+	 * @param message The text to be shown in the alert
+	 */
+	private void createAlert(String message)
+	{
+		Alert alert = new Alert(AlertType.ERROR, message);		//This could be improved to look more modern
+		alert.setHeaderText(null);
+		GaussianBlur blur = new GaussianBlur(5);
+		mainPane.setEffect(blur);
+		alert.showAndWait();
+		mainPane.setEffect(null);
 	}
 	
 	/**

@@ -18,12 +18,19 @@ import java.awt.image.BufferedImage;
 public class ImageEditor
 {
 	protected BufferedImage bufferedImage;
+	private int imageType;
 	
 	public ImageEditor(BufferedImage image)
 	{
 		bufferedImage = image;
+		imageType = bufferedImage.getType();
 	}
 	
+	/**
+	 * Uses an AffineTransform to rotate a BufferedImage 90 degrees clockwise.
+	 * This function converts GIFs to TYPE_INT_ARGB to preserve transparency
+	 * @return A rotated BufferedImage
+	 */
 	public BufferedImage rotateRight()
 	{
 		int width = bufferedImage.getWidth();
@@ -35,12 +42,26 @@ public class ImageEditor
 		rotateTransform.rotate(Math.PI / 2);
 		rotateTransform.translate(width / -2, height / -2);
 		
+		BufferedImage newImage;
+		
+		if (imageType == BufferedImage.TYPE_BYTE_INDEXED)									//GIFs are converted to TYPE_INT_ARGB to preserve transparency and colors
+			newImage = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
+		else
+			newImage = new BufferedImage(height, width, imageType);
+		
 		AffineTransformOp rotateOp = new AffineTransformOp(rotateTransform, AffineTransformOp.TYPE_BILINEAR);
-		bufferedImage = rotateOp.filter(bufferedImage, null);
+		rotateOp.filter(bufferedImage, newImage);
+		bufferedImage = newImage;
+		newImage.flush();
 		
 		return bufferedImage;
 	}
 	
+	/**
+	 * Uses an AffineTransform to rotate a BufferedImage 90 degrees counter-clockwise.
+	 * This function converts GIFs to TYPE_INT_ARGB to preserve transparency
+	 * @return A rotated BufferedImage
+	 */
 	public BufferedImage rotateLeft()
 	{
 		int width = bufferedImage.getWidth();
@@ -52,11 +73,24 @@ public class ImageEditor
 		rotateTransform.rotate(Math.PI / -2);
 		rotateTransform.translate(width / -2, height / -2);
 		
+		BufferedImage newImage;
+		
+		if (imageType == BufferedImage.TYPE_BYTE_INDEXED)
+			newImage = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
+		else
+			newImage = new BufferedImage(height, width, imageType);
+		
 		AffineTransformOp rotateOp = new AffineTransformOp(rotateTransform, AffineTransformOp.TYPE_BILINEAR);
-		bufferedImage = rotateOp.filter(bufferedImage, null);
+		rotateOp.filter(bufferedImage, newImage);
+		bufferedImage = newImage;
+		newImage.flush();
 		return bufferedImage;
 	}
 	
+	/**
+	 * Mirrors the bufferedImage horizontally
+	 * @return A flipped BufferedImage
+	 */
 	public BufferedImage flipHorizontal()
 	{
 		AffineTransform flipTransform = AffineTransform.getScaleInstance(-1, 1);
@@ -68,6 +102,10 @@ public class ImageEditor
 		
 	}
 	
+	/**
+	 * Mirrors the bufferedImage vertically
+	 * @return A flipped BufferedImage
+	 */
 	public BufferedImage flipVertical()
 	{
 		AffineTransform flipTransform = AffineTransform.getScaleInstance(1, -1);
