@@ -38,13 +38,13 @@ public class ImageEditor
 		
 		AffineTransform rotateTransform = new AffineTransform();
 				
-		rotateTransform.translate(height / 2, width / 2);		//Images with a height and/or width not divisible by 2 are rounded down to the nearest even number
+		rotateTransform.translate(height / 2, width / 2);	//Images with a height and/or width not divisible by 2 are rounded down to the nearest even number
 		rotateTransform.rotate(Math.PI / 2);
 		rotateTransform.translate(width / -2, height / -2);
 		
 		BufferedImage newImage;
 		
-		if (imageType == BufferedImage.TYPE_BYTE_INDEXED)									//GIFs are converted to TYPE_INT_ARGB to preserve transparency and colors
+		if (imageType == BufferedImage.TYPE_BYTE_INDEXED)	//GIFs are converted to TYPE_INT_ARGB to preserve transparency and colors
 			newImage = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
 		else
 			newImage = new BufferedImage(height, width, imageType);

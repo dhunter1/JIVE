@@ -36,6 +36,7 @@ public class GUI
 	Stage stage;
 	ImageViewer imageViewer;
 	Project project;
+	boolean redoAvailable = false;	//Redo is only available immediately after the undo function is used
 	
 	@FXML
 	private AnchorPane mainPane;	
@@ -137,6 +138,7 @@ public class GUI
 		BufferedImage image = project.undo();
 		imageViewer.update(SwingFXUtils.toFXImage(image, null));
 		project.setHasUnsavedChanges(true);
+		redoAvailable = true;
 		updateGUI();
 	}
 	
@@ -145,6 +147,7 @@ public class GUI
 		BufferedImage image = project.redo();
 		imageViewer.update(SwingFXUtils.toFXImage(image, null));
 		project.setHasUnsavedChanges(true);
+		redoAvailable = true;
 		updateGUI();
 	}
 	
@@ -154,6 +157,7 @@ public class GUI
 		BufferedImage newImage = project.rotateRight();
 		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
 		project.setHasUnsavedChanges(true);
+		redoAvailable = false;
 		updateGUI();
 	}
 	
@@ -163,6 +167,7 @@ public class GUI
 		BufferedImage newImage = project.rotateLeft();
 		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
 		project.setHasUnsavedChanges(true);
+		redoAvailable = false;
 		updateGUI();
 	}
 	
@@ -172,6 +177,7 @@ public class GUI
 		BufferedImage newImage = project.flipHorizontal();
 		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
 		project.setHasUnsavedChanges(true);
+		redoAvailable = false;
 		updateGUI();
 	}
 	
@@ -181,6 +187,7 @@ public class GUI
 		BufferedImage newImage = project.flipVertical();
 		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
 		project.setHasUnsavedChanges(true);
+		redoAvailable = false;
 		updateGUI();
 	}
 	
@@ -219,13 +226,13 @@ public class GUI
 		}
 		
 		fileChooser.setTitle("JIVE - Open an Image");
-		File imageFile = fileChooser.showOpenDialog(stage);		//This could be improved to open in the Pictures directory
+		File imageFile = fileChooser.showOpenDialog(stage);	//This could be improved to open in the Pictures directory
 				
 		if (imageFile != null)
 		{
 			Image image;
 			
-			String fileName = imageFile.getName();				//Users can enter non-image files manually, so additional validation is done here
+			String fileName = imageFile.getName();			//Users can enter non-image files manually, so additional validation is done here
 			int extensionIndex = fileName.lastIndexOf(".");
 			String extension = fileName.substring(extensionIndex + 1);
 			
@@ -251,6 +258,7 @@ public class GUI
 				return;				
 			}
 			
+			redoAvailable = false;
 			saveAsItem.setDisable(false);
 			rotateRightButton.setDisable(false);
 			rotateLeftButton.setDisable(false);
@@ -286,10 +294,13 @@ public class GUI
 		else
 			undoButton.setDisable(false);
 		
+		if (!redoAvailable)
+			project.clearUndoHistory();
+			
 		if (project.undoHistoryIsEmpty())
 			redoButton.setDisable(true);
 		else
-			redoButton.setDisable(false);
+			redoButton.setDisable(false);		
 	}
 	
 	/**
@@ -298,7 +309,7 @@ public class GUI
 	 */
 	private void createAlert(String message)
 	{
-		Alert alert = new Alert(AlertType.ERROR, message);		//This could be improved to look more modern
+		Alert alert = new Alert(AlertType.ERROR, message);
 		alert.setHeaderText(null);
 		GaussianBlur blur = new GaussianBlur(5);
 		mainPane.setEffect(blur);

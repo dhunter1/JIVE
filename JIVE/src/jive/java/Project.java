@@ -161,6 +161,14 @@ public class Project extends ImageEditor
 	}
 	
 	/**
+	 * Empties the undoHistory stack
+	 */
+	public void clearUndoHistory()
+	{
+		undoHistory.clear();
+	}
+	
+	/**
 	 * Check if the project has unsaved changes
 	 * @return true if it has unsaved changes, false otherwise
 	 */
@@ -187,6 +195,10 @@ public class Project extends ImageEditor
 		hasUnsavedChanges = unsavedChanges;
 	}
 	
+	/**
+	 * Get the file extension as a String
+	 * @return The file extension of the current project
+	 */
 	public String getFileExtension()
 	{
 		return fileExtension;
