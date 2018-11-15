@@ -101,7 +101,6 @@ public class Project extends ImageEditor
 				ImageIO.write(bufferedImage, newFileExtension, newFile);
 			}
 			
-			hasUnsavedChanges = false;
 			return true;
 		}
 		catch (Exception e)

@@ -4,7 +4,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
-//TODO: implement crop, resize, and metadata functions
+//TODO: implement resize and metadata functions
 
 /**
  * ImageEditor encompasses all image editing functions. 
@@ -115,18 +115,29 @@ public class ImageEditor
 		bufferedImage = flipOp.filter(bufferedImage, null);
 		return bufferedImage;
 	}
-	
-	public BufferedImage crop(int x, int y)
+
+	/**
+	 * Crops the bufferedImage using the specified coordinates and dimensions
+	 * 
+	 * @param x - The X coordinate of the upper-left corner of the crop area
+	 * @param y - The Y coordinate of the upper-left corner of the crop area
+	 * @param width - The width of the crop area
+	 * @param height - The height of the crop area
+	 * @return A cropped BufferedImage
+	 */
+	public BufferedImage crop(int x, int y, int width, int height)
 	{
-		//Need to calculate target width/height and call bufferedImage.getSubImage()
-		return null;
+		bufferedImage = bufferedImage.getSubimage(x, y, width, height);
+		return bufferedImage;
 	}
 	
+	//TODO:
 	public BufferedImage resize(double percentage)
 	{
 		return null;
 	}
 	
+	//TODO:
 	public BufferedImage editMetadata()
 	{
 		return null;

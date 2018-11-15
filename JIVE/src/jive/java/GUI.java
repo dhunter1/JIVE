@@ -16,6 +16,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -35,6 +37,7 @@ public class GUI
 	
 	Stage stage;
 	ImageViewer imageViewer;
+	CropSelector cropSelector;
 	Project project;
 	boolean redoAvailable = false;	//Redo is only available immediately after the undo function is used
 	
@@ -42,6 +45,16 @@ public class GUI
 	private AnchorPane mainPane;	
 	@FXML
 	private AnchorPane viewerPane;
+	@FXML
+	private StackPane functionPane;
+	@FXML
+	private HBox editingBox;
+	@FXML
+	private HBox cropBox;
+	@FXML
+	private Button confirmCropButton;
+	@FXML
+	private Button cancelCropButton;
 	@FXML
 	private MenuItem saveAsItem;
 	@FXML
@@ -74,7 +87,8 @@ public class GUI
 		imageViewer = new ImageViewer();
 		viewerPane.getChildren().add(imageViewer);
 		
-		AnchorPane.setTopAnchor(imageViewer, 0.0);		//Anchor the imageViewer node to the viewerPane to resize the imageViewer with the stage
+		//Anchor the imageViewer node to the viewerPane to resize the imageViewer with the stage
+		AnchorPane.setTopAnchor(imageViewer, 0.0);
 		AnchorPane.setRightAnchor(imageViewer, 0.0);
 		AnchorPane.setLeftAnchor(imageViewer, 0.0);
 		AnchorPane.setBottomAnchor(imageViewer, 0.0);
@@ -90,7 +104,8 @@ public class GUI
 		String currFileExt = "*." + project.getFileExtension();
 		FileChooser fileChooser = new FileChooser();
 		
-		FileChooser.ExtensionFilter filter;	//Filters appear in the order they are added, so the current extension is added first
+		//Filters appear in the order they are added, so the current extension is added first
+		FileChooser.ExtensionFilter filter;
 		filter = new FileChooser.ExtensionFilter(currFileExt, currFileExt);
 		fileChooser.getExtensionFilters().add(filter);
 		
@@ -114,8 +129,7 @@ public class GUI
 				updateGUI();
 			else
 				createAlert("Error: could not save image");
-		}
-		
+		}		
 	}
 	
 	//TODO:
@@ -135,8 +149,8 @@ public class GUI
 	
 	@FXML void undoButtonAction() 
 	{
-		BufferedImage image = project.undo();
-		imageViewer.update(SwingFXUtils.toFXImage(image, null));
+		BufferedImage newImage = project.undo();
+		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
 		project.setHasUnsavedChanges(true);
 		redoAvailable = true;
 		updateGUI();
@@ -144,8 +158,8 @@ public class GUI
 	
 	@FXML void redoButtonAction() 
 	{
-		BufferedImage image = project.redo();
-		imageViewer.update(SwingFXUtils.toFXImage(image, null));
+		BufferedImage newImage = project.redo();
+		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
 		project.setHasUnsavedChanges(true);
 		redoAvailable = true;
 		updateGUI();
@@ -191,10 +205,32 @@ public class GUI
 		updateGUI();
 	}
 	
-	//TODO:
 	@FXML void cropAction() 
 	{
-		
+		cropBox.toFront();
+		cropSelector = new CropSelector(imageViewer, imageViewer.imageView, confirmCropButton);
+	}
+	
+	@FXML void confirmCropAction()
+	{
+		project.storeState();
+		int x = cropSelector.getCropX();
+		int y = cropSelector.getCropY();
+		int width = cropSelector.getCropWidth();
+		int height = cropSelector.getCropHeight();
+		BufferedImage newImage = project.crop(x, y, width, height);
+		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
+		project.setHasUnsavedChanges(true);
+		redoAvailable = false;
+		updateGUI();
+		cropSelector.remove();
+		editingBox.toFront();
+	}
+	
+	@FXML void cancelCropAction()
+	{
+		editingBox.toFront();
+		cropSelector.remove();
 	}
 	
 	//TODO:
@@ -210,7 +246,7 @@ public class GUI
 	}
 		
 	/*
-	 * This function opens a user-selected image file for viewing and editing
+	 * This function allows the user to select an image file for viewing and editing
 	 */
 	private void openFile()
 	{
@@ -226,13 +262,14 @@ public class GUI
 		}
 		
 		fileChooser.setTitle("JIVE - Open an Image");
-		File imageFile = fileChooser.showOpenDialog(stage);	//This could be improved to open in the Pictures directory
+		File imageFile = fileChooser.showOpenDialog(stage);
 				
 		if (imageFile != null)
 		{
 			Image image;
 			
-			String fileName = imageFile.getName();			//Users can enter non-image files manually, so additional validation is done here
+			//Users can enter non-image files manually, so additional validation is done here
+			String fileName = imageFile.getName();
 			int extensionIndex = fileName.lastIndexOf(".");
 			String extension = fileName.substring(extensionIndex + 1);
 			
@@ -258,6 +295,7 @@ public class GUI
 				return;				
 			}
 			
+			editingBox.toFront();
 			redoAvailable = false;
 			saveAsItem.setDisable(false);
 			rotateRightButton.setDisable(false);
@@ -267,6 +305,9 @@ public class GUI
 			cropButton.setDisable(false);
 			resizeButton.setDisable(false);
 			editMetadataButton.setDisable(false);
+			
+			if (cropSelector != null)
+				cropSelector.remove();
 		}
 	}
 	
