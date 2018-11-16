@@ -4,7 +4,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
-//TODO: implement resize and metadata functions
+//TODO: implement metadata editing functions
 
 /**
  * ImageEditor encompasses all image editing functions. 
@@ -131,10 +131,30 @@ public class ImageEditor
 		return bufferedImage;
 	}
 	
-	//TODO:
-	public BufferedImage resize(double percentage)
+	/**
+	 * Resizes the bufferedImage by the given factor
+	 * @param scaleFactor - The percent to scale by, between 0.0 and 1.0
+	 * @return A resized BufferedImage
+	 */
+	public BufferedImage resize(double scaleFactor)
 	{
-		return null;
+		int newWidth = (int) (bufferedImage.getWidth() * scaleFactor);
+		int newHeight = (int) (bufferedImage.getHeight() * scaleFactor);
+		
+		AffineTransform scaleTransform = new AffineTransform();
+		scaleTransform.scale(scaleFactor, scaleFactor);
+		
+		BufferedImage newImage;
+		if (imageType == BufferedImage.TYPE_BYTE_INDEXED)
+			newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+		else
+			newImage = new BufferedImage(newWidth, newHeight, imageType);
+		
+		AffineTransformOp scaleOp = new AffineTransformOp(scaleTransform, AffineTransformOp.TYPE_BILINEAR);
+		scaleOp.filter(bufferedImage, newImage);
+		bufferedImage = newImage;
+		newImage.flush();
+		return bufferedImage;
 	}
 	
 	//TODO:

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import javafx.beans.value.ChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -13,6 +14,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -52,9 +54,7 @@ public class GUI
 	@FXML
 	private HBox cropBox;
 	@FXML
-	private Button confirmCropButton;
-	@FXML
-	private Button cancelCropButton;
+	private HBox resizeBox;
 	@FXML
 	private MenuItem saveAsItem;
 	@FXML
@@ -78,9 +78,23 @@ public class GUI
 	@FXML
 	private Button editMetadataButton;
 	@FXML
+	private Button confirmCropButton;
+	@FXML
+	private Button cancelCropButton;
+	@FXML
+	private Button confirmResizeButton;
+	@FXML
+	private Button cancelResizeButton;
+	@FXML
+	private Slider resizeSlider;
+	@FXML
 	private Label nameLabel;
 	@FXML
 	private Label sizeLabel;
+	@FXML
+	private Label resizePercentLabel;
+	@FXML
+	private Label newDimensionsLabel;
 	
 	public void initialize()
 	{		
@@ -92,6 +106,8 @@ public class GUI
 		AnchorPane.setRightAnchor(imageViewer, 0.0);
 		AnchorPane.setLeftAnchor(imageViewer, 0.0);
 		AnchorPane.setBottomAnchor(imageViewer, 0.0);
+		
+		resizeSlider.valueProperty().addListener(sliderListener);
 	}
 		
 	@FXML void openFileAction()
@@ -233,10 +249,29 @@ public class GUI
 		cropSelector.remove();
 	}
 	
-	//TODO:
 	@FXML void resizeAction() 
 	{
-		
+		resizeSlider.setValue(resizeSlider.getMax());
+		confirmResizeButton.setDisable(true);
+		resizeBox.toFront();
+	}
+	
+	@FXML void confirmResizeAction()
+	{
+		project.storeState();
+		double percentage = Math.round(resizeSlider.getValue());
+		double scaleFactor = percentage / 100;
+		BufferedImage newImage = project.resize(scaleFactor);
+		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
+		project.setHasUnsavedChanges(true);
+		redoAvailable = false;
+		updateGUI();
+		editingBox.toFront();
+	}
+	
+	@FXML void cancelResizeAction()
+	{
+		editingBox.toFront();
 	}
 	
 	//TODO:
@@ -318,7 +353,8 @@ public class GUI
 	private void updateGUI()
 	{
 		sizeLabel.setText(project.getWidth() + " x " + project.getHeight());
-		
+		newDimensionsLabel.setText(project.getWidth() + " x " + project.getHeight());
+				
 		if (project.hasUnsavedChanges())
 		{
 			saveButton.setDisable(false);
@@ -341,7 +377,7 @@ public class GUI
 		if (project.undoHistoryIsEmpty())
 			redoButton.setDisable(true);
 		else
-			redoButton.setDisable(false);		
+			redoButton.setDisable(false);
 	}
 	
 	/**
@@ -365,4 +401,24 @@ public class GUI
 	{
 		this.stage = stage;
 	}
+	
+	/**
+	 * sliderListener updates the percentage label and the new dimensions label
+	 * according to the value of the slider. It also enables or disables the
+	 * confirmResizeButton as appropriate.
+	 */
+	ChangeListener<Number> sliderListener = (observable, oldValue, newValue) -> 
+	{
+		double sliderValue = Math.round(resizeSlider.getValue());
+		double scale = sliderValue / 100;
+		int newWidth = (int) (project.getWidth() * scale);
+		int newHeight = (int) (project.getHeight() * scale);
+		resizePercentLabel.setText(String.valueOf((int) sliderValue) + "%");
+		newDimensionsLabel.setText(newWidth + " x " + newHeight);
+		
+		if (newWidth < 1 || newHeight < 1 || scale == 1)
+			confirmResizeButton.setDisable(true);
+		else
+			confirmResizeButton.setDisable(false);
+	};
 }

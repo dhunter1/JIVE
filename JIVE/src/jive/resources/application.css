@@ -70,3 +70,11 @@
 	-fx-graphic: url("icons/HelpIcon.png");
 	-fx-graphic-text-gap: 15;
 }
+
+#resizeSlider .thumb {
+	-fx-background-color: #f2f2f2;
+}
+
+#resizeSlider .track {
+	-fx-control-inner-background: black;
+}
