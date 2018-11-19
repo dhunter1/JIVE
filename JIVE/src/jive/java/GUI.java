@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.beans.value.ChangeListener;
 import javafx.embed.swing.SwingFXUtils;
@@ -12,11 +13,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -108,6 +112,29 @@ public class GUI
 		AnchorPane.setBottomAnchor(imageViewer, 0.0);
 		
 		resizeSlider.valueProperty().addListener(sliderListener);
+		
+		mainPane.setOnKeyPressed(event -> 
+		{
+			if (event.getCode() == KeyCode.O && event.isControlDown())
+			{
+				openFile();
+			}
+			if (event.getCode() == KeyCode.S && event.isControlDown())
+			{
+				if (project != null && project.hasUnsavedChanges())
+					saveButtonAction();
+			}
+			if (event.getCode() == KeyCode.Z && event.isControlDown())
+			{
+				if (project != null && !project.stateHistoryIsEmpty())
+					undoButtonAction();
+			}
+			if (event.getCode() == KeyCode.Y && event.isControlDown())
+			{
+				if (redoAvailable && !project.undoHistoryIsEmpty())
+					redoButtonAction();
+			}
+		});
 	}
 		
 	@FXML void openFileAction()
@@ -395,11 +422,31 @@ public class GUI
 	}
 	
 	/**
-	 * This method is used to set a reference to the stage from the Main class
+	 * This method is used to set a reference to the stage from the Main class.
+	 * It also defines the applications behavior when the stage is closed.
 	 */
 	public void setStage(Stage stage)
 	{
 		this.stage = stage;
+		
+		stage.setOnCloseRequest(event ->
+		{
+			if (project != null && project.hasUnsavedChanges())
+			{
+				ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+				ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+				Alert alert = new Alert(AlertType.CONFIRMATION, 
+						"Do you want to save changes to " + project.getName() + "?",
+						yesButton, noButton);
+				alert.setHeaderText(null);
+				alert.setTitle("JIVE - Save Changes");
+				GaussianBlur blur = new GaussianBlur(7);
+				mainPane.setEffect(blur);
+				Optional<ButtonType> response = alert.showAndWait();
+				if (response.get() == yesButton)
+					project.save();
+			}
+		});
 	}
 	
 	/**
