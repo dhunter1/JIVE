@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<!--
+	This document is the user manual for JIVE.
+	It is displayed in the application using JavaFX's WebView.
+	Author: Devon Hunter
+	November 18th, 2018
+-->
+<html>
+
+<head>
+	<title> JIVE User Manual </title>
+	<style ="text/css">
+		p {
+			margin-left: 50px;
+		}		
+		.image {
+			text-align: center;
+		}
+		body {
+			color: #f2f2f2;
+			background-color: black;
+		}
+	</style>
+</head>
+
+<header align="center"> 
+	<h1>Java Image Viewer and Editor (JIVE)</h1>
+	<h1> User Manual</h1>
+	<img src="./icons/JiveIcon.png" alt="JIVE Icon">
+</header>
+
+<body style="margin-left: 20px; margin-right: 10px;">
+	<br>
+	<hr style="border-width:2px">
+	
+	<h1> 1.&nbsp;&nbsp;&nbsp;Getting Started </h1>
+
+		<h3> 1.1. &nbsp;&nbsp;Opening an Image File </h3>
+
+		<p> 
+			To open an image file, select the menu button > Open File. 
+			The menu button is the only button that is enabled when no image is loaded. 
+			JIVE supports .jpg, .gif, .bmp, and .png files. 
+			Attempting to open any other file type will result in an error message. 
+			<br>
+			<div class="image">
+			<img src="./screenshots/OpenFile.png">
+			</div>
+		</p>
+
+		<h3> 1.2. &nbsp;&nbsp;Resizing the Window </h3>
+
+		<p> 
+			Window resizing is handled by your operating system, including snap resizing. 
+			If an image is loaded it will be resized as necessary to fit into the viewer. The aspect ratio will always be preserved.
+		</p>
+
+		<h3> 1.3. &nbsp;&nbsp;Zooming </h3>
+
+		<p> 
+			When an image is loaded users can zoom in or out by holding the CTRL key and scrolling on their mouse. 
+			This feature still needs to be implemented and this should be updated.
+		</p>
+		
+	<br>
+	<hr style="border-width:2px">
+		
+	<h1> 2.&nbsp;&nbsp;&nbsp;Editing Images </h1>
+	
+		<p> 
+			This section discusses how to use JIVE&apos;s image editing functions. 
+
+			The editing buttons are only enabled after an image is loaded.
+
+			If there is any confusion regarding button function during use, users can hover their mouse over any of the buttons to receive a tooltip specifying the button&apos;s function.
+
+		</p>
+
+		<h3> 2.1. &nbsp;&nbsp;Rotating </h3>
+		
+		<p> 
+			Images can be rotated 90 degrees at a time. Users can rotate an image clockwise or counter-clockwise with these buttons, respectively:
+			<br>
+			<div class="image">
+			<img src="./icons/CwRotateIcon.png" hspace="40">
+			<img src="./icons/CCWRotateIcon.png" hspace="40">
+			</div>
+		</p>
+		
+		<h3> 2.2. &nbsp;&nbsp;Flipping </h3>
+		
+		<p> 
+			Images can be flipped (or mirrored) horizontally and vertically. The flip functions are controlled by the following buttons:
+			<br>
+			<div class="image">
+			<img src="./icons/HorizontalFlipIcon.png" hspace="40">
+			<img src="./icons/VerticalFlipIcon.png" hspace="40">
+			</div>
+		</p>
+		
+		<h3> 2.3. &nbsp;&nbsp;Cropping </h3>
+		
+		<p> 
+			Images can be cropped using the crop tool, which is opened by pressing the crop button:
+			<br>
+			<div class="image">
+			<img src="./icons/CropIcon.png">
+			</div>
+		</p>
+		<p>
+			In the crop tool you can select the area to crop by clicking and dragging your mouse over the image to create a rectangle. The area of the image outside of the blue rectangle will be removed:
+			<br>
+			<div class="image">
+			<img src="./screenshots/CropTool.png" width="85%" height="85%">
+			</div>
+		</p>
+		<p>
+			The following buttons can be used to return to the main editing panel or proceed with the operation:
+			<br>
+			<div class="image">
+			<img src="./icons/CancelIcon.png" hspace="40">
+			<img src="./icons/ConfirmIcon.png" hspace="40">
+			</div>
+		</p>
+		<p>
+			The cancel button (left) can be pressed at any time to exit the crop tool without making changes. 
+			The confirm button (right) will only be enabled when a crop area is selected. 
+			Pressing the confirm button executes the crop operation and exits the crop tool. 
+		</p>
+		
+		<h3> 2.4. &nbsp;&nbsp;Resizing </h3>
+		
+		<p> 
+			Images can be scaled down using the resize tool. Open the tool using the following button:
+			<br>
+			<div class="image">
+			<img src="./icons/ResizeIcon.png">
+			</div>
+		</p>
+		<p>	
+			Use the slider in the resize tool to select the percent to resize by. New image dimensions are previewed under the &quot;New Dimensions:&quot; label:
+			<br>
+			<div class="image">
+			<img src="./screenshots/ResizeTool.png" width="85%" height="85%">
+			</div>
+		</p>
+		<p>
+			Like the crop function above, the cancel button will exit the resize tool without making changes and the confirm button with commence the resize operation. 
+			The confirm button will be disabled if the slider is at 100% or if the new dimensions are less than 1 x 1.
+			<br>
+			<br>
+			<font color="red">NOTE:</font> Resizing images typically results in some quality loss.
+		</p>
+		
+		<h3> 2.5. &nbsp;&nbsp;Metadata </h3>
+		
+		<p> 
+			
+		</p>
+		
+	<br>
+	<hr style="border-width:2px">	
+		
+	<h1> 3.&nbsp;&nbsp;&nbsp;Managing Your Changes </h1>
+
+		<h3> 3.1. &nbsp;&nbsp;Undo </h3>
+		
+		<p> 
+			Changes to your project can undone using the undo button in the upper left-hand corner:
+			<br>
+			<div class="image">
+			<img src="./icons/undoIcon.png">
+			</div>
+		</p>
+		<p>
+			The history of changes to your project is stored until the program is closed or a new image is opened. 
+			This button is disabled when there are no changes to undo. 
+			&apos;Save As&apos; and metadata editing history are not stored and cannot be undone.
+		</p>
+		
+		<h3> 3.2. &nbsp;&nbsp;Redo </h3>
+		
+		<p> 
+			Undone changes can be redone with the redo button:
+			<br>
+			<div class="image">
+			<img src="./icons/redoIcon.png">
+			</div>
+		</p>
+		<p>
+			This button is disabled when there are no changes to redo. 
+			The undo history is only stored immediately after changes are undone. 
+			If a new editing function is performed the undo history is cleared and the redo button is disabled.
+		</p>
+		
+		<h3> 3.3. &nbsp;&nbsp;Save </h3>
+		
+		<p> 
+			Images can be saved using the save button next to the menu button:
+			<br>
+			<div class="image">
+			<img src="./icons/SaveIcon.png">
+			</div>
+		</p>
+		<p>
+			This will save any changes made to the image, except metadata modifications. 
+			Metadata changes are saved immediately after confirming the changes in the metadata editor. 
+			<br><br>
+			<font color="red">WARNING:</font> This button will always overwrite the image file that is open in JIVE.
+		</p>
+		
+		<h3> 3.4. &nbsp;&nbsp;Save As </h3>
+		
+		<p> 
+			Images can be saved as different names, in different directories, and as different file types using the save as feature:
+			<br>
+			<div class="image">
+			<img src="./screenshots/SaveAs.png">
+			</div>
+		</p>
+		<p>
+			On-click, JIVE will open a file explorer:
+			<br>
+			<div class="image">
+			<img src="./screenshots/FileExplorer.png">
+			</div>
+		</p>
+		<p>
+			You can then navigate to the desired destination directory. 
+			File name can be edited by typing in the text box and file type can be selected using the file-type drop-down list.
+			<br><br>
+			Images can be converted to any of the compatible formats (JPG, PNG, BMP, or GIF).
+			<br><br>
+			The file type must be selected from the drop-down menu. 
+			JIVE will ignore file extensions that are appended to the file name. 
+			Entering the file name &quot;image.jpg&quot; will not convert the image to a JPG but will create a file named &quot;image.jpg&quot; in the file type selected from the drop-down list.
+			<br><br>
+			<font color="red">NOTE:</font> JPGs and BMPs do not support transparency. 
+			If you are converting from a PNG or GIF with transparency, the transparent pixels will be converted to white. 
+			Transparency is preserved when converting between PNG and GIF.
+		</p>

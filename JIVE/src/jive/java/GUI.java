@@ -10,6 +10,7 @@ import java.util.Optional;
 import javafx.beans.value.ChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -24,6 +25,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -175,11 +177,22 @@ public class GUI
 		}		
 	}
 	
-	//TODO:
 	@FXML void helpAction() 
 	{
-		//Need to decide how to display user manual
-		//Either in-application or maybe html file?
+		String helpFile = getClass().getResource("/jive/resources/JIVE_User_Manual.html").toExternalForm();
+		Stage helpStage = new Stage();
+		helpStage.setResizable(false);
+		helpStage.setTitle("JIVE - User Manual");
+		StackPane pane = new StackPane();
+		pane.setStyle("-fx-background-color:red");
+		WebView webView = new WebView();
+		pane.getChildren().add(webView);
+		webView.getEngine().setUserStyleSheetLocation(getClass().getResource("/jive/resources/WebViewManual.css").toString());
+		webView.getEngine().load(helpFile);
+		Scene root = new Scene(pane);
+		helpStage.setScene(root);
+		helpStage.getIcons().add(new Image(getClass().getResourceAsStream("/jive/resources/icons/JiveIcon.png")));
+		helpStage.show();
 	}
 	
 	@FXML void saveButtonAction() 
