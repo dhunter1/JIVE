@@ -83,7 +83,7 @@
 			<br>
 			<div class="image">
 			<img src="./icons/CwRotateIcon.png" hspace="40">
-			<img src="./icons/CCWRotateIcon.png" hspace="40">
+			<img src="./icons/CcwRotateIcon.png" hspace="40">
 			</div>
 		</p>
 		
@@ -149,13 +149,29 @@
 			The confirm button will be disabled if the slider is at 100% or if the new dimensions are less than 1 x 1.
 			<br>
 			<br>
-			<font color="red">NOTE:</font> Resizing images typically results in some quality loss.
+			<font color="red">NOTE:</font> Resizing images typically results in some loss in quality.
 		</p>
 		
-		<h3> 2.5. &nbsp;&nbsp;Metadata </h3>
+		<h3> 2.5. &nbsp;&nbsp;Brightness and Contrast </h3>
 		
 		<p> 
-			
+			Image brightness and contrast can be adjusted by pressing:
+			<br>
+			<div class="image">
+			<img src="./icons/BrightnessContrastIcon.png">
+			</div>
+		</p>
+		<p>
+			This will display two sliders - the top slider adjusts the brightness and the bottoms adjusts contrast. 
+			Brightness and contrast are increased or decreased by moving the sliders to the right or left, respectively.
+			<br>
+			<div class="image">
+			<img src="./icons/BrightnessTool.png">
+			</div>
+		</p>
+		<p>
+			The brightness and contrast adjustments are shown real-time in the image viewer.
+			Similar to the crop and resize functions, the cancel button will cancel the operation and the confirm button will apply the changes.
 		</p>
 		
 	<br>
@@ -169,7 +185,7 @@
 			Changes to your project can undone using the undo button in the upper left-hand corner:
 			<br>
 			<div class="image">
-			<img src="./icons/undoIcon.png">
+			<img src="./icons/UndoIcon.png">
 			</div>
 		</p>
 		<p>
@@ -184,7 +200,7 @@
 			Undone changes can be redone with the redo button:
 			<br>
 			<div class="image">
-			<img src="./icons/redoIcon.png">
+			<img src="./icons/RedoIcon.png">
 			</div>
 		</p>
 		<p>
@@ -203,8 +219,8 @@
 			</div>
 		</p>
 		<p>
-			This will save any changes made to the image, except metadata modifications. 
-			Metadata changes are saved immediately after confirming the changes in the metadata editor. 
+			This will save any changes made to the image. The button will be disabled if there are no changes to save. 
+			Once an image is edited, the button will be enabled and an asterisk(*) will be appended to the displayed name. 
 			<br><br>
 			<font color="red">WARNING:</font> This button will always overwrite the image file that is open in JIVE.
 		</p>
@@ -231,9 +247,9 @@
 			<br><br>
 			Images can be converted to any of the compatible formats (JPG, PNG, BMP, or GIF).
 			<br><br>
-			The file type must be selected from the drop-down menu. 
-			JIVE will ignore file extensions that are appended to the file name. 
-			Entering the file name &quot;image.jpg&quot; will not convert the image to a JPG but will create a file named &quot;image.jpg&quot; in the file type selected from the drop-down list.
+			The file type can be selected from the drop-down menu of appended to the file name. 
+			For example, entering the file name &quot;image.jpg&quot; will convert the image to a JPG and override the file type in the &quot;Save As Type:&quot; list.
+			JIVE will save the image as the file type selected in the &quot;Save As Type:&quot; drop-down menu if no file extension is appended to the file name. 
 			<br><br>
 			<font color="red">NOTE:</font> JPGs and BMPs do not support transparency. 
 			If you are converting from a PNG or GIF with transparency, the transparent pixels will be converted to white. 

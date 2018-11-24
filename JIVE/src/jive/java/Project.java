@@ -16,12 +16,11 @@ import javax.imageio.ImageIO;
  * 
  * Edited images can be saved to file or converted to different raster file formats.
  * 
- * Undo and redo functionality can be implemented using the stateHistory and undoHistory
+ * Undo and redo functionality are implemented using the stateHistory and undoHistory
  * variables to store BufferedImage objects in memory until a new project is opened or
  * the ImageEditor instance is destroyed.
  * 
  * @author Devon Hunter
- * @author Craig Vandeventer
  * @author Casey Brown
  *
  */
@@ -112,18 +111,22 @@ public class Project extends ImageEditor
 	
 	/**
 	 * This method reverts the bufferedImage object to its previous state.
-	 * @return A javaFX Image of the previous state
+	 * @return A BufferedImage object of the previous state
 	 */
 	public BufferedImage undo()
 	{
 		undoHistory.push(bufferedImage);
 		bufferedImage = stateHistory.pop();
+		
+		if (stateHistory.isEmpty())
+			hasUnsavedChanges = false;
+		
 		return bufferedImage;
 	}
 	
 	/**
 	 * This method reverts the bufferedImage object to its previous state.
-	 * @return A javaFX Image of the previous state
+	 * @return A BufferedImage object of the previous state
 	 */
 	public BufferedImage redo()
 	{
@@ -187,7 +190,7 @@ public class Project extends ImageEditor
 	
 	/**
 	 * Toggle the hasUnsavedChanges variable
-	 * @param unsavedChanges
+	 * @param unsavedChanges boolean to set hasUnsavedChanges to
 	 */
 	public void setHasUnsavedChanges(boolean unsavedChanges)
 	{

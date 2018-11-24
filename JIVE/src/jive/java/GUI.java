@@ -35,7 +35,6 @@ import javafx.stage.Stage;
  * It is responsible for handling user input and coordinating image viewing and editing functions.
  * 
  * @author Devon Hunter
- * @author Craig Vandeventer
  * @author Casey Brown
  *
  */
@@ -62,6 +61,8 @@ public class GUI
 	@FXML
 	private HBox resizeBox;
 	@FXML
+	private HBox brightnessBox;
+	@FXML
 	private MenuItem saveAsItem;
 	@FXML
 	private Button saveButton;
@@ -82,7 +83,7 @@ public class GUI
 	@FXML
 	private Button resizeButton;
 	@FXML
-	private Button editMetadataButton;
+	private Button editBrightnessButton;
 	@FXML
 	private Button confirmCropButton;
 	@FXML
@@ -91,6 +92,14 @@ public class GUI
 	private Button confirmResizeButton;
 	@FXML
 	private Button cancelResizeButton;
+	@FXML
+	private Button confirmBrightnessButton;
+	@FXML
+	private Button cancelBrightnessButton;
+	@FXML
+	private Slider brightnessSlider;
+	@FXML
+	private Slider contrastSlider;
 	@FXML
 	private Slider resizeSlider;
 	@FXML
@@ -101,6 +110,10 @@ public class GUI
 	private Label resizePercentLabel;
 	@FXML
 	private Label newDimensionsLabel;
+	@FXML
+	private Label brightnessLabel;
+	@FXML
+	private Label contrastLabel;
 	
 	public void initialize()
 	{		
@@ -113,7 +126,9 @@ public class GUI
 		AnchorPane.setLeftAnchor(imageViewer, 0.0);
 		AnchorPane.setBottomAnchor(imageViewer, 0.0);
 		
-		resizeSlider.valueProperty().addListener(sliderListener);
+		resizeSlider.valueProperty().addListener(resizeSliderListener);
+		brightnessSlider.valueProperty().addListener(brightnessSliderListener);
+		contrastSlider.valueProperty().addListener(contrastSliderListener);
 		
 		mainPane.setOnKeyPressed(event -> 
 		{
@@ -207,7 +222,12 @@ public class GUI
 	{
 		BufferedImage newImage = project.undo();
 		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
-		project.setHasUnsavedChanges(true);
+		
+		if (project.stateHistoryIsEmpty())
+			project.setHasUnsavedChanges(false);
+		else
+			project.setHasUnsavedChanges(true);
+		
 		redoAvailable = true;
 		updateGUI();
 	}
@@ -314,10 +334,30 @@ public class GUI
 		editingBox.toFront();
 	}
 	
-	//TODO:
-	@FXML void editMetadataAction() 
+	@FXML void editBrightnessAction() 
 	{
-		
+		brightnessSlider.setValue(100);
+		contrastSlider.setValue(100);
+		brightnessBox.toFront();
+	}
+	
+	@FXML void confirmBrightnessAction()
+	{
+		project.storeState();
+		double brightness = brightnessSlider.getValue() - 100;
+		double contrast = contrastSlider.getValue() / 100;
+		BufferedImage newImage = project.adjustBrightnessContrast(brightness, contrast);
+		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
+		project.setHasUnsavedChanges(true);
+		redoAvailable = false;
+		updateGUI();
+		editingBox.toFront();
+	}
+	
+	@FXML void cancelBrightnessAction()
+	{
+		editingBox.toFront();
+		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 	}
 		
 	/*
@@ -379,7 +419,7 @@ public class GUI
 			flipVerticalButton.setDisable(false);
 			cropButton.setDisable(false);
 			resizeButton.setDisable(false);
-			editMetadataButton.setDisable(false);
+			editBrightnessButton.setDisable(false);
 			
 			if (cropSelector != null)
 				cropSelector.remove();
@@ -428,6 +468,7 @@ public class GUI
 	{
 		Alert alert = new Alert(AlertType.ERROR, message);
 		alert.setHeaderText(null);
+		alert.setTitle("JIVE - Error");
 		GaussianBlur blur = new GaussianBlur(5);
 		mainPane.setEffect(blur);
 		alert.showAndWait();
@@ -436,7 +477,7 @@ public class GUI
 	
 	/**
 	 * This method is used to set a reference to the stage from the Main class.
-	 * It also defines the applications behavior when the stage is closed.
+	 * It also defines the application's behavior when the stage is closed.
 	 */
 	public void setStage(Stage stage)
 	{
@@ -448,14 +489,19 @@ public class GUI
 			{
 				ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
 				ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+				
 				Alert alert = new Alert(AlertType.CONFIRMATION, 
 						"Do you want to save changes to " + project.getName() + "?",
 						yesButton, noButton);
+				
 				alert.setHeaderText(null);
 				alert.setTitle("JIVE - Save Changes");
+				
 				GaussianBlur blur = new GaussianBlur(7);
 				mainPane.setEffect(blur);
+				
 				Optional<ButtonType> response = alert.showAndWait();
+				
 				if (response.get() == yesButton)
 					project.save();
 			}
@@ -463,16 +509,18 @@ public class GUI
 	}
 	
 	/**
-	 * sliderListener updates the percentage label and the new dimensions label
+	 * resizeSliderListener updates the resizePercentLabel and the newDimensionsLabel
 	 * according to the value of the slider. It also enables or disables the
 	 * confirmResizeButton as appropriate.
 	 */
-	ChangeListener<Number> sliderListener = (observable, oldValue, newValue) -> 
+	ChangeListener<Number> resizeSliderListener = (observable, oldValue, newValue) -> 
 	{
 		double sliderValue = Math.round(resizeSlider.getValue());
 		double scale = sliderValue / 100;
+		
 		int newWidth = (int) (project.getWidth() * scale);
 		int newHeight = (int) (project.getHeight() * scale);
+		
 		resizePercentLabel.setText(String.valueOf((int) sliderValue) + "%");
 		newDimensionsLabel.setText(newWidth + " x " + newHeight);
 		
@@ -480,5 +528,35 @@ public class GUI
 			confirmResizeButton.setDisable(true);
 		else
 			confirmResizeButton.setDisable(false);
+	};
+	
+	/**
+	 * This listener updates the brightnessSlider label and previews brightness changes.
+	 * The slider min and max values are 0 and 200, respectively. 100 is subtracted from
+	 * the value to effectively make the adjustment between -100 and 100.
+	 */
+	ChangeListener<Number> brightnessSliderListener = (observable, oldValue, newValue) ->
+	{
+		double brightnessValue = brightnessSlider.getValue() - 100;
+		double contrastValue = contrastSlider.getValue() / 100;
+		brightnessLabel.setText(String.valueOf((int) brightnessValue));
+		
+		BufferedImage previewImage = project.previewBrightnessContrast(brightnessValue, contrastValue);
+		imageViewer.update(SwingFXUtils.toFXImage(previewImage, null));
+	};
+	
+	/**
+	 * This listener updates the contrastSlider label and previews contrast changes.
+	 * The adjustment value is divided by 100 to calculate the appropriate
+	 * value to pass to adjustBrightnessContrast()
+	 */
+	ChangeListener<Number> contrastSliderListener = (observable, oldValue, newValue) ->
+	{
+		double contrastValue = contrastSlider.getValue() / 100;
+		double brightnessValue = brightnessSlider.getValue() - 100;
+		contrastLabel.setText(String.valueOf((int) (contrastValue * 100 - 100)));
+				
+		BufferedImage previewImage = project.previewBrightnessContrast(brightnessValue, contrastValue);
+		imageViewer.update(SwingFXUtils.toFXImage(previewImage, null));
 	};
 }

@@ -3,16 +3,13 @@ package jive.java;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-
-//TODO: implement metadata editing functions
+import java.awt.image.RescaleOp;
 
 /**
  * ImageEditor encompasses all image editing functions. 
  * The functions operate on the bufferedImage attribute and return edited BufferedImage objects
  * 
  * @author Devon Hunter
- * @author Craig Vandeventer
- * @author Casey Brown
  *
  */
 public class ImageEditor
@@ -44,7 +41,7 @@ public class ImageEditor
 		
 		BufferedImage newImage;
 		
-		if (imageType == BufferedImage.TYPE_BYTE_INDEXED)	//GIFs are converted to TYPE_INT_ARGB to preserve transparency and colors
+		if (imageType == BufferedImage.TYPE_BYTE_INDEXED)	//Indexed images are converted to TYPE_INT_ARGB to preserve transparency and colors
 			newImage = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
 		else
 			newImage = new BufferedImage(height, width, imageType);
@@ -157,10 +154,92 @@ public class ImageEditor
 		return bufferedImage;
 	}
 	
-	//TODO:
-	public BufferedImage editMetadata()
+	/*
+	 * Adjusts the brightness and contrast of a BufferedImage using RescaleOp.
+	 * RescaleOp uses a version of the following algorithm to adjust brightness and contrast:
+	 * 
+	 * newPixelColor = scaleFactor(currentPixelColor) + offset
+	 * 
+	 * scaleFactor affects the contrast and offset affects the brightness.
+	 * 
+	 * @param brightnessAdjustment - the offset to be applied to each pixel (-100.0 to 100)
+	 * @param contrastAdjustment - the value to scale the pixel by (0.0 to 2.0)
+	 * @return a BufferedImage with the appropriate brightness and contrast adjustments
+	 */	
+	public BufferedImage adjustBrightnessContrast(double brightnessAdjustment, double contrastAdjustment)
+	{			
+		//RescaleOp doesn't support images with indexed color
+		//Images with indexed color (PNGs and GIFs, typically) are converted to ARGB
+		if (imageType == BufferedImage.TYPE_BYTE_INDEXED)
+		{
+			BufferedImage newImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			newImage.createGraphics().drawImage(bufferedImage, 0, 0, null);
+			bufferedImage.flush();
+			bufferedImage = newImage;
+		}
+		
+		RescaleOp brightnessOp;
+		float offset = (float) brightnessAdjustment;
+		float scaleFactor = (float) contrastAdjustment;
+		
+		if (bufferedImage.getColorModel().hasAlpha())
+		{
+			float[] scaleFactors = {scaleFactor, scaleFactor, scaleFactor, scaleFactor};
+			float[] offsets = {offset, offset, offset, 0};	//Alpha channel is not adjusted
+			brightnessOp = new RescaleOp(scaleFactors, offsets, null);
+		}
+		else
+		{
+			brightnessOp = new RescaleOp(scaleFactor, offset, null);
+		}
+				
+		bufferedImage = brightnessOp.filter(bufferedImage, null);
+		
+		return bufferedImage;
+	}
+	
+	/**
+	 * Same as adjustBrightnessContrast(), but adjustments are not saved to the bufferedImage attribute
+	 * @param brightnessAdjustment
+	 * @param contrastAdjustment
+	 * @return A BufferedImage with the appropriate adjustments
+	 */
+	public BufferedImage previewBrightnessContrast(double brightnessAdjustment, double contrastAdjustment)
+	{			
+		if (imageType == BufferedImage.TYPE_BYTE_INDEXED)
+		{
+			BufferedImage newImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			newImage.createGraphics().drawImage(bufferedImage, 0, 0, null);
+			bufferedImage.flush();
+			bufferedImage = newImage;
+		}
+		
+		RescaleOp rescaleOp;
+		float offset = (float) brightnessAdjustment;
+		float scaleFactor = (float) contrastAdjustment;
+		
+		if (bufferedImage.getColorModel().hasAlpha())
+		{
+			float[] scaleFactors = {scaleFactor, scaleFactor, scaleFactor, scaleFactor};
+			float[] offsets = {offset, offset, offset, 0};
+			rescaleOp = new RescaleOp(scaleFactors, offsets, null);
+		}
+		else
+		{
+			rescaleOp = new RescaleOp(scaleFactor, offset, null);
+		}
+				
+		BufferedImage preview = rescaleOp.filter(bufferedImage, null);
+		
+		return preview;
+	}
+	
+	/**
+	 * @return a reference to the bufferedImage attribute
+	 */
+	public BufferedImage getImage()
 	{
-		return null;
+		return bufferedImage;
 	}
 	
 	/**

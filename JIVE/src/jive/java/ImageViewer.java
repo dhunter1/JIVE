@@ -12,8 +12,6 @@ import javafx.scene.layout.BorderPane;
  * Image ratio is preserved during resizing.
  * 
  * @author Devon Hunter
- * @author Craig Vandeventer
- * @author Casey Brown
  *
  */
 public class ImageViewer extends BorderPane
