@@ -10,7 +10,7 @@
 <head>
 	<title> JIVE User Manual </title>
 	<style ="text/css">
-		p {
+		p, h2 {
 			margin-left: 50px;
 		}		
 		.image {
@@ -35,31 +35,37 @@
 	
 	<h1> 1.&nbsp;&nbsp;&nbsp;Getting Started </h1>
 
-		<h3> 1.1. &nbsp;&nbsp;Opening an Image File </h3>
+		<h2> 1.1. &nbsp;&nbsp;Opening an Image File </h2>
 
 		<p> 
-			To open an image file, select the menu button > Open File. 
+			To open an image file, select the menu button then select &apos;Open File&apos;, or press Ctrl+O. 
 			The menu button is the only button that is enabled when no image is loaded. 
 			JIVE supports .jpg, .gif, .bmp, and .png files. 
 			Attempting to open any other file type will result in an error message. 
 			<br>
 			<div class="image">
-			<img src="./screenshots/OpenFile.png">
+			<img src="./screenshots/OpenFile.png" width="85%" height="85%">
 			</div>
 		</p>
 
-		<h3> 1.2. &nbsp;&nbsp;Resizing the Window </h3>
+		<h2> 1.2. &nbsp;&nbsp;Resizing the Window </h2>
 
 		<p> 
 			Window resizing is handled by your operating system, including snap resizing. 
 			If an image is loaded it will be resized as necessary to fit into the viewer. The aspect ratio will always be preserved.
 		</p>
 
-		<h3> 1.3. &nbsp;&nbsp;Zooming </h3>
+		<h2> 1.3. &nbsp;&nbsp;Keyboard Shortcuts </h2>
 
 		<p> 
-			When an image is loaded users can zoom in or out by holding the CTRL key and scrolling on their mouse. 
-			This feature still needs to be implemented and this should be updated.
+			Keyboard shortcuts for certain functions are noted in the relevant sections of this manual. 
+			They are also listed below for reference:
+			<ul style="margin-left: 50px">
+				<li>Ctrl+O: Open a new file</li>
+				<li>Ctrl+S: Save the current project</li>
+				<li>Ctrl+Z: Undo</li>
+				<li>Ctrl+Y: Redo</li>
+			</ul>
 		</p>
 		
 	<br>
@@ -76,7 +82,7 @@
 
 		</p>
 
-		<h3> 2.1. &nbsp;&nbsp;Rotating </h3>
+		<h2> 2.1. &nbsp;&nbsp;Rotating </h2>
 		
 		<p> 
 			Images can be rotated 90 degrees at a time. Users can rotate an image clockwise or counter-clockwise with these buttons, respectively:
@@ -87,7 +93,7 @@
 			</div>
 		</p>
 		
-		<h3> 2.2. &nbsp;&nbsp;Flipping </h3>
+		<h2> 2.2. &nbsp;&nbsp;Flipping </h2>
 		
 		<p> 
 			Images can be flipped (or mirrored) horizontally and vertically. The flip functions are controlled by the following buttons:
@@ -98,7 +104,7 @@
 			</div>
 		</p>
 		
-		<h3> 2.3. &nbsp;&nbsp;Cropping </h3>
+		<h2> 2.3. &nbsp;&nbsp;Cropping </h2>
 		
 		<p> 
 			Images can be cropped using the crop tool, which is opened by pressing the crop button:
@@ -111,7 +117,7 @@
 			In the crop tool you can select the area to crop by clicking and dragging your mouse over the image to create a rectangle. The area of the image outside of the blue rectangle will be removed:
 			<br>
 			<div class="image">
-			<img src="./screenshots/CropTool.png" width="85%" height="85%">
+			<img src="./screenshots/CropTool.png" width="90%" height="90%">
 			</div>
 		</p>
 		<p>
@@ -128,7 +134,7 @@
 			Pressing the confirm button executes the crop operation and exits the crop tool. 
 		</p>
 		
-		<h3> 2.4. &nbsp;&nbsp;Resizing </h3>
+		<h2> 2.4. &nbsp;&nbsp;Resizing </h2>
 		
 		<p> 
 			Images can be scaled down using the resize tool. Open the tool using the following button:
@@ -145,17 +151,17 @@
 			</div>
 		</p>
 		<p>
-			Like the crop function above, the cancel button will exit the resize tool without making changes and the confirm button with commence the resize operation. 
+			Like the crop function above, the cancel button will exit the resize tool without making changes and the confirm button will commence the resize operation. 
 			The confirm button will be disabled if the slider is at 100% or if the new dimensions are less than 1 x 1.
 			<br>
 			<br>
 			<font color="red">NOTE:</font> Resizing images typically results in some loss in quality.
 		</p>
 		
-		<h3> 2.5. &nbsp;&nbsp;Brightness and Contrast </h3>
+		<h2> 2.5. &nbsp;&nbsp;Brightness and Contrast </h2>
 		
 		<p> 
-			Image brightness and contrast can be adjusted by pressing:
+			Image brightness and contrast can be adjusted by clicking this button:
 			<br>
 			<div class="image">
 			<img src="./icons/BrightnessContrastIcon.png">
@@ -166,7 +172,7 @@
 			Brightness and contrast are increased or decreased by moving the sliders to the right or left, respectively.
 			<br>
 			<div class="image">
-			<img src="./icons/BrightnessTool.png">
+			<img src="./screenshots/BrightnessTool.png" width="85%" height="85%">
 			</div>
 		</p>
 		<p>
@@ -179,10 +185,10 @@
 		
 	<h1> 3.&nbsp;&nbsp;&nbsp;Managing Your Changes </h1>
 
-		<h3> 3.1. &nbsp;&nbsp;Undo </h3>
+		<h2> 3.1. &nbsp;&nbsp;Undo </h2>
 		
 		<p> 
-			Changes to your project can undone using the undo button in the upper left-hand corner:
+			Changes to your project can undone by pressing Ctrl+Z or using the undo button in the upper left-hand corner:
 			<br>
 			<div class="image">
 			<img src="./icons/UndoIcon.png">
@@ -191,13 +197,13 @@
 		<p>
 			The history of changes to your project is stored until the program is closed or a new image is opened. 
 			This button is disabled when there are no changes to undo. 
-			&apos;Save As&apos; and metadata editing history are not stored and cannot be undone.
+			&apos;Save As&apos; actions are not stored and cannot be undone.
 		</p>
 		
-		<h3> 3.2. &nbsp;&nbsp;Redo </h3>
+		<h2> 3.2. &nbsp;&nbsp;Redo </h2>
 		
 		<p> 
-			Undone changes can be redone with the redo button:
+			Undone changes can be redone with Ctrl+Y or the redo button:
 			<br>
 			<div class="image">
 			<img src="./icons/RedoIcon.png">
@@ -209,10 +215,10 @@
 			If a new editing function is performed the undo history is cleared and the redo button is disabled.
 		</p>
 		
-		<h3> 3.3. &nbsp;&nbsp;Save </h3>
+		<h2> 3.3. &nbsp;&nbsp;Save </h2>
 		
 		<p> 
-			Images can be saved using the save button next to the menu button:
+			Images can be saved using the save button next to the menu button or by pressing Ctrl+S:
 			<br>
 			<div class="image">
 			<img src="./icons/SaveIcon.png">
@@ -225,20 +231,20 @@
 			<font color="red">WARNING:</font> This button will always overwrite the image file that is open in JIVE.
 		</p>
 		
-		<h3> 3.4. &nbsp;&nbsp;Save As </h3>
+		<h2> 3.4. &nbsp;&nbsp;Save As </h2>
 		
 		<p> 
 			Images can be saved as different names, in different directories, and as different file types using the save as feature:
 			<br>
 			<div class="image">
-			<img src="./screenshots/SaveAs.png">
+			<img src="./screenshots/SaveAs.png" width="85%" height="85%">
 			</div>
 		</p>
 		<p>
-			On-click, JIVE will open a file explorer:
+			On-click, JIVE will open a file explorer (Windows 10 shown below):
 			<br>
 			<div class="image">
-			<img src="./screenshots/FileExplorer.png">
+			<img src="./screenshots/SaveAsExplorer.png" width="85%" height="85%">
 			</div>
 		</p>
 		<p>
@@ -247,9 +253,9 @@
 			<br><br>
 			Images can be converted to any of the compatible formats (JPG, PNG, BMP, or GIF).
 			<br><br>
-			The file type can be selected from the drop-down menu of appended to the file name. 
+			The file type can be selected from the drop-down menu or appended to the file name. 
 			For example, entering the file name &quot;image.jpg&quot; will convert the image to a JPG and override the file type in the &quot;Save As Type:&quot; list.
-			JIVE will save the image as the file type selected in the &quot;Save As Type:&quot; drop-down menu if no file extension is appended to the file name. 
+			If no file extension is appended to the file name, JIVE will save the image as the file type selected in the &quot;Save As Type:&quot; drop-down menu.
 			<br><br>
 			<font color="red">NOTE:</font> JPGs and BMPs do not support transparency. 
 			If you are converting from a PNG or GIF with transparency, the transparent pixels will be converted to white. 
