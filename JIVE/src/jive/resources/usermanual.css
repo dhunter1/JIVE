@@ -1,3 +1,5 @@
+/*This document is responsible for styling the Webview object that displays the user manual */
+
 ::-webkit-scrollbar {
 	width: 12px;
 }

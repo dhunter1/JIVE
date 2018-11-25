@@ -10,38 +10,34 @@ import javax.imageio.ImageIO;
 
 /**
  * Project consists of methods to edit BufferedImage objects and manage editing projects.
- * 
- * Image editing functions are extended from the ImageEditor class.
- * All editing functions return a newly-edited BufferedImage object.
- * 
- * Edited images can be saved to file or converted to different raster file formats.
- * 
+ * <br><br>
+ * Actual image editing is performed by the ImageEditor class and the
+ * changes are applied to the class's bufferedImage attribute.
+ * <br><br>
+ * Images can be saved to file or converted to different raster file formats (JPEG, PNG, BMP, and GIF).
+ * <br><br>
  * Undo and redo functionality are implemented using the stateHistory and undoHistory
- * variables to store BufferedImage objects in memory until a new project is opened or
+ * stacks to store BufferedImage objects in memory until a new project is opened or
  * the ImageEditor instance is destroyed.
  * 
  * @author Devon Hunter
  * @author Casey Brown
  *
  */
-public class Project extends ImageEditor
+public class Project
 {
+	private ImageEditor imageEditor = new ImageEditor();
+	private BufferedImage bufferedImage;
 	private File imageFile;
 	private String fileExtension;
 	private Stack<BufferedImage> stateHistory;
 	private Stack<BufferedImage> undoHistory;	
 	private boolean hasUnsavedChanges;
 	
-	/**
-	 * Initializes state history, undo history, and hasUnsavedChanges
-	 * @param A File object of the image to create a project from
-	 */
 	public Project(File imageFile) throws IOException
 	{
-		super(ImageIO.read(imageFile));
-		
+		bufferedImage = ImageIO.read(imageFile);		
 		this.imageFile = imageFile;
-		
 		fileExtension = findFileExtension(imageFile);				
 		stateHistory = new Stack<BufferedImage>();
 		undoHistory = new Stack<BufferedImage>();
@@ -49,7 +45,7 @@ public class Project extends ImageEditor
 	}
 	
 	/**
-	 * Saves the Project's BufferedImage object to disk
+	 * Saves the Project's BufferedImage object to disk.
 	 * This function overwrites the bufferedImage's original file.
 	 * @return True if successful, false otherwise
 	 */
@@ -110,64 +106,171 @@ public class Project extends ImageEditor
 	}
 	
 	/**
-	 * This method reverts the bufferedImage object to its previous state.
-	 * @return A BufferedImage object of the previous state
+	 * Undo the most recent editing function.
+	 * Reverts the bufferedImage to its previous state.
 	 */
-	public BufferedImage undo()
+	public void undo()
 	{
 		undoHistory.push(bufferedImage);
 		bufferedImage = stateHistory.pop();
-		
-		if (stateHistory.isEmpty())
-			hasUnsavedChanges = false;
-		
-		return bufferedImage;
+		hasUnsavedChanges = true;		
 	}
 	
 	/**
-	 * This method reverts the bufferedImage object to its previous state.
-	 * @return A BufferedImage object of the previous state
+	 * Redo the most recent undone action.
+	 * Reapplies the change that was undone.
 	 */
-	public BufferedImage redo()
+	public void redo()
 	{
 		stateHistory.push(bufferedImage);
 		bufferedImage = undoHistory.pop();
-		return bufferedImage;
+		hasUnsavedChanges = true;
 	}
 	
 	/**
-	 * Pushes the ImageEditor's current BufferedImage object onto a stack of previous states.
-	 * This method should be called before every editing function for undo/redo functionality.
+	 * Rotates the bufferedImage 90* clockwise and updates relevant
+	 * project attributes.
+	 * 
+	 * @see ImageEditor#rotateRight(BufferedImage)
 	 */
-	public void storeState()
+	public void rotateRight()
 	{
 		stateHistory.push(bufferedImage);
+		bufferedImage = imageEditor.rotateRight(bufferedImage);
+		hasUnsavedChanges = true;
+		undoHistory.clear();
 	}
+	
+	/**
+	 * Rotates the bufferedImage 90* counter-clockwise and
+	 * updates relevant project attributes.
+	 * 
+	 * @see ImageEditor#rotateLeft(BufferedImage)
+	 */
+	public void rotateLeft()
+	{
+		stateHistory.push(bufferedImage);
+		bufferedImage = imageEditor.rotateLeft(bufferedImage);
+		hasUnsavedChanges = true;
+		undoHistory.clear();
+	}
+	
+	/**
+	 * Mirrors the bufferedImage horizontally and updates
+	 * relevant project attributes.
+	 * 
+	 * @see ImageEditor#flipHorizontal(BufferedImage)
+	 */
+	public void flipHorizontal()
+	{
+		stateHistory.push(bufferedImage);
+		bufferedImage = imageEditor.flipHorizontal(bufferedImage);
+		hasUnsavedChanges = true;
+		undoHistory.clear();
+	}
+	
+	/**
+	 * Mirrors the bufferedImage vertically and updates
+	 * relevant project attributes.
+	 * 
+	 * @see ImageEditor#flipVertical(BufferedImage)
+	 */
+	public void flipVertical()
+	{
+		stateHistory.push(bufferedImage);
+		bufferedImage = imageEditor.flipVertical(bufferedImage);
+		hasUnsavedChanges = true;
+		undoHistory.clear();
+	}
+	
+	/**
+	 * Crops the bufferedImage using the specified coordinates and dimensions
+	 * and updates relevant project attributes.
+	 * 
+	 * @param x - The X coordinate of the upper-left corner of the crop area
+	 * @param y - The Y coordinate of the upper-left corner of the crop area
+	 * @param width - The width of the crop area
+	 * @param height - The height of the crop area
+	 * 
+	 * @see ImageEditor#crop(BufferedImage, int, int, int, int)
+	 */
+	public void crop(int x, int y, int width, int height)
+	{
+		stateHistory.push(bufferedImage);
+		bufferedImage = imageEditor.crop(bufferedImage, x, y, width, height);
+		hasUnsavedChanges = true;
+		undoHistory.clear();
+	}
+	
+	/**
+	 * Resizes the bufferedImage by the specified factor and
+	 * updates relevant project attributes.
+	 * 
+	 * @param scaleFactor - the percent to resize by (0.0 to 1.0)
+	 * @see ImageEditor#resize(BufferedImage, double)
+	 */
+	public void resize(double scaleFactor)
+	{
+		stateHistory.push(bufferedImage);
+		bufferedImage = imageEditor.resize(bufferedImage, scaleFactor);
+		hasUnsavedChanges = true;
+		undoHistory.clear();
+	}
+	
+	/**
+	 * Applies brightness and contrast adjustments to the bufferedImage. The bufferedImage attribute is
+	 * updated to reflect the adjustments and relevant project attributes are updated.
+	 * <br><br>
+	 * To preview an adjustment without actually making changes to the project,
+	 * use the previewBrightnessContrast() function.
+	 * 
+	 * @param brightnessAdjustment - the offset to be applied to each pixel (-100.0 to 100.0)
+	 * @param contrastAdjustment - the value to scale the pixel by (0.0 to 2.0)
+	 * 
+	 * @see ImageEditor#adjustBrightnessContrast(BufferedImage, double, double)
+	 * @see #previewBrightnessContrast(double, double)
+	 */
+	public void adjustBrightnessContrast(double brightnessAdjustment, double contrastAdjustment)
+	{
+		stateHistory.push(bufferedImage);
+		bufferedImage = imageEditor.adjustBrightnessContrast(bufferedImage, brightnessAdjustment, contrastAdjustment);
+		hasUnsavedChanges = true;
+		undoHistory.clear();
+	}
+	
+	/**
+	 * Applies brightness and contrast adjustments to the bufferedImage but
+	 * doesn't store the result or modify any project attributes.
+	 * 
+	 * @param brightnessAdjustment - the offset to be applied to each pixel (-100.0 to 100.0)
+	 * @param contrastAdjustment - the value to scale each pixel by (0.0 to 2.0)
+	 * @return the current bufferedImage with brightness and contrast adjustments applied (but not stored)
+	 * 
+	 * @see ImageEditor#adjustBrightnessContrast(BufferedImage, double, double)
+	 */
+	public BufferedImage previewBrightnessContrast(double brightnessAdjustment, double contrastAdjustment)
+	{
+		BufferedImage previewImage = imageEditor.adjustBrightnessContrast(bufferedImage, brightnessAdjustment, contrastAdjustment);
+		return previewImage;
+	}
+	
 	
 	/**
 	 * Checks if there are BufferedImage objects in the undoHistory stack
 	 * @return True if the stack is empty, false otherwise.
 	 */
-	public boolean undoHistoryIsEmpty()
+	public boolean isRedoAvailable()
 	{
-		return undoHistory.isEmpty();
+		return !undoHistory.isEmpty();
 	}
 	
 	/**
 	 * Checks if there are BufferedImage objects in the stateHistory stack
 	 * @return True if the stack is empty, false otherwise.
 	 */
-	public boolean stateHistoryIsEmpty()
+	public boolean isUndoAvailable()
 	{
-		return stateHistory.isEmpty();
-	}
-	
-	/**
-	 * Empties the undoHistory stack
-	 */
-	public void clearUndoHistory()
-	{
-		undoHistory.clear();
+		return !stateHistory.isEmpty();
 	}
 	
 	/**
@@ -179,6 +282,7 @@ public class Project extends ImageEditor
 		return hasUnsavedChanges;
 	}
 	
+	
 	/**
 	 * Get the name of the file of the current project
 	 * @return The file name as a string
@@ -186,15 +290,6 @@ public class Project extends ImageEditor
 	public String getName()
 	{
 		return imageFile.getName();
-	}
-	
-	/**
-	 * Toggle the hasUnsavedChanges variable
-	 * @param unsavedChanges boolean to set hasUnsavedChanges to
-	 */
-	public void setHasUnsavedChanges(boolean unsavedChanges)
-	{
-		hasUnsavedChanges = unsavedChanges;
 	}
 	
 	/**
@@ -207,8 +302,32 @@ public class Project extends ImageEditor
 	}
 	
 	/**
+	 * @return a reference to the bufferedImage attribute
+	 */
+	public BufferedImage getImage()
+	{
+		return bufferedImage;
+	}
+	
+	/**
+	 * @return The height of the class's BufferedImage attribute
+	 */
+	public int getHeight()
+	{
+		return bufferedImage.getHeight();
+	}
+	
+	/**
+	 * @return The width of the class's BufferedImage attribute
+	 */
+	public int getWidth()
+	{
+		return bufferedImage.getWidth();
+	}
+	
+	/**
 	 * Gets the file extension of a file
-	 * @param file A File object
+	 * @param file - A File object
 	 * @return The extension of the file
 	 */
 	private String findFileExtension(File file)

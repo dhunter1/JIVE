@@ -30,7 +30,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
- * This class is the controller class for the JIVE GUI.
+ * This is the controller class for the JIVE GUI.
  * 
  * It is responsible for handling user input and coordinating image viewing and editing functions.
  * 
@@ -38,82 +38,48 @@ import javafx.stage.Stage;
  * @author Casey Brown
  *
  */
-public class GUI
+public class Controller
 {	
 	final List<String> COMPATIBLE_FORMATS = Arrays.asList("*.jpg", "*.png", "*.bmp", "*.gif");
 	
 	Stage stage;
 	ImageViewer imageViewer;
-	CropSelector cropSelector;
 	Project project;
-	boolean redoAvailable = false;	//Redo is only available immediately after the undo function is used
+	CropSelector cropSelector;
 	
-	@FXML
-	private AnchorPane mainPane;	
-	@FXML
-	private AnchorPane viewerPane;
-	@FXML
-	private StackPane functionPane;
-	@FXML
-	private HBox editingBox;
-	@FXML
-	private HBox cropBox;
-	@FXML
-	private HBox resizeBox;
-	@FXML
-	private HBox brightnessBox;
-	@FXML
-	private MenuItem saveAsItem;
-	@FXML
-	private Button saveButton;
-	@FXML
-	private Button undoButton;
-	@FXML
-	private Button redoButton;
-	@FXML
-	private Button rotateRightButton;
-	@FXML
-	private Button rotateLeftButton;
-	@FXML
-	private Button flipHorizontalButton;
-	@FXML
-	private Button flipVerticalButton;
-	@FXML
-	private Button cropButton;
-	@FXML
-	private Button resizeButton;
-	@FXML
-	private Button editBrightnessButton;
-	@FXML
-	private Button confirmCropButton;
-	@FXML
-	private Button cancelCropButton;
-	@FXML
-	private Button confirmResizeButton;
-	@FXML
-	private Button cancelResizeButton;
-	@FXML
-	private Button confirmBrightnessButton;
-	@FXML
-	private Button cancelBrightnessButton;
-	@FXML
-	private Slider brightnessSlider;
-	@FXML
-	private Slider contrastSlider;
-	@FXML
-	private Slider resizeSlider;
-	@FXML
-	private Label nameLabel;
-	@FXML
-	private Label sizeLabel;
-	@FXML
-	private Label resizePercentLabel;
-	@FXML
-	private Label newDimensionsLabel;
-	@FXML
-	private Label brightnessLabel;
-	@FXML
-	private Label contrastLabel;
+	@FXML private AnchorPane mainPane;	
+	@FXML private AnchorPane viewerPane;
+	@FXML private StackPane functionPane;
+	@FXML private HBox editingBox;
+	@FXML private HBox cropBox;
+	@FXML private HBox resizeBox;
+	@FXML private HBox brightnessBox;
+	@FXML private MenuItem saveAsItem;
+	@FXML private Button saveButton;
+	@FXML private Button undoButton;
+	@FXML private Button redoButton;
+	@FXML private Button rotateRightButton;
+	@FXML private Button rotateLeftButton;
+	@FXML private Button flipHorizontalButton;
+	@FXML private Button flipVerticalButton;
+	@FXML private Button cropButton;
+	@FXML private Button resizeButton;
+	@FXML private Button editBrightnessButton;
+	@FXML private Button confirmCropButton;
+	@FXML private Button cancelCropButton;
+	@FXML private Button confirmResizeButton;
+	@FXML private Button cancelResizeButton;
+	@FXML private Button confirmBrightnessButton;
+	@FXML private Button cancelBrightnessButton;
+	@FXML private Slider brightnessSlider;
+	@FXML private Slider contrastSlider;
+	@FXML private Slider resizeSlider;
+	@FXML private Label nameLabel;
+	@FXML private Label sizeLabel;
+	@FXML private Label resizePercentLabel;
+	@FXML private Label newDimensionsLabel;
+	@FXML private Label brightnessLabel;
+	@FXML private Label contrastLabel;
 	
 	public void initialize()
 	{		
@@ -133,9 +99,8 @@ public class GUI
 		mainPane.setOnKeyPressed(event -> 
 		{
 			if (event.getCode() == KeyCode.O && event.isControlDown())
-			{
 				openFile();
-			}
+			
 			if (event.getCode() == KeyCode.S && event.isControlDown())
 			{
 				if (project != null && project.hasUnsavedChanges())
@@ -143,22 +108,29 @@ public class GUI
 			}
 			if (event.getCode() == KeyCode.Z && event.isControlDown())
 			{
-				if (project != null && !project.stateHistoryIsEmpty())
+				if (project != null && !project.isUndoAvailable())
 					undoButtonAction();
 			}
 			if (event.getCode() == KeyCode.Y && event.isControlDown())
 			{
-				if (redoAvailable && !project.undoHistoryIsEmpty())
+				if (project.isRedoAvailable())
 					redoButtonAction();
 			}
 		});
 	}
 		
+	/**
+	 * Opens a new file in the viewer and creates a project
+	 */
 	@FXML void openFileAction()
 	{
 		openFile();
 	}
 	
+	/**
+	 * Provides a native file explorer for the 'Save As' feature to collect
+	 * the necessary input from the user.
+	 */
 	@FXML void saveAsAction() 
 	{
 		String currFileExt = "*." + project.getFileExtension();
@@ -192,21 +164,26 @@ public class GUI
 		}		
 	}
 	
+	/**
+	 * Displays the user manual in a new window
+	 */
 	@FXML void helpAction() 
 	{
-		String helpFile = getClass().getResource("/jive/resources/JIVE_User_Manual.html").toExternalForm();
+		String helpFile = getClass().getResource("/jive/resources/jiveUserManual.html").toExternalForm();
 		Stage helpStage = new Stage();
+		StackPane pane = new StackPane();
+		WebView webView = new WebView();
+		Scene root = new Scene(pane);
+		
 		helpStage.setResizable(false);
 		helpStage.setTitle("JIVE - User Manual");
-		StackPane pane = new StackPane();
-		pane.setStyle("-fx-background-color:red");
-		WebView webView = new WebView();
-		pane.getChildren().add(webView);
-		webView.getEngine().setUserStyleSheetLocation(getClass().getResource("/jive/resources/WebViewManual.css").toString());
-		webView.getEngine().load(helpFile);
-		Scene root = new Scene(pane);
 		helpStage.setScene(root);
 		helpStage.getIcons().add(new Image(getClass().getResourceAsStream("/jive/resources/icons/JiveIcon.png")));
+		
+		webView.getEngine().setUserStyleSheetLocation(getClass().getResource("/jive/resources/usermanual.css").toString());
+		webView.getEngine().load(helpFile);
+		pane.getChildren().add(webView);
+		
 		helpStage.show();
 	}
 	
@@ -220,64 +197,43 @@ public class GUI
 	
 	@FXML void undoButtonAction() 
 	{
-		BufferedImage newImage = project.undo();
-		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
-		
-		if (project.stateHistoryIsEmpty())
-			project.setHasUnsavedChanges(false);
-		else
-			project.setHasUnsavedChanges(true);
-		
-		redoAvailable = true;
+		project.undo();
+		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 		updateGUI();
 	}
 	
 	@FXML void redoButtonAction() 
 	{
-		BufferedImage newImage = project.redo();
-		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
-		project.setHasUnsavedChanges(true);
-		redoAvailable = true;
+		project.redo();
+		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 		updateGUI();
 	}
 	
 	@FXML void rotateRightAction() 
 	{
-		project.storeState();
-		BufferedImage newImage = project.rotateRight();
-		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
-		project.setHasUnsavedChanges(true);
-		redoAvailable = false;
+		project.rotateRight();
+		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 		updateGUI();
 	}
 	
 	@FXML void rotateLeftAction() 
 	{
-		project.storeState();
-		BufferedImage newImage = project.rotateLeft();
-		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
-		project.setHasUnsavedChanges(true);
-		redoAvailable = false;
+		project.rotateLeft();
+		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 		updateGUI();
 	}
 	
 	@FXML void flipHorizontalAction() 
 	{
-		project.storeState();
-		BufferedImage newImage = project.flipHorizontal();
-		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
-		project.setHasUnsavedChanges(true);
-		redoAvailable = false;
+		project.flipHorizontal();
+		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 		updateGUI();
 	}
 	
 	@FXML void flipVerticalAction() 
 	{
-		project.storeState();
-		BufferedImage newImage = project.flipVertical();
-		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
-		project.setHasUnsavedChanges(true);
-		redoAvailable = false;
+		project.flipVertical();
+		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 		updateGUI();
 	}
 	
@@ -289,20 +245,17 @@ public class GUI
 	
 	@FXML void confirmCropAction()
 	{
-		project.storeState();
 		int x = cropSelector.getCropX();
 		int y = cropSelector.getCropY();
 		int width = cropSelector.getCropWidth();
 		int height = cropSelector.getCropHeight();
-		BufferedImage newImage = project.crop(x, y, width, height);
-		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
-		project.setHasUnsavedChanges(true);
-		redoAvailable = false;
+		project.crop(x, y, width, height);
+		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 		updateGUI();
 		cropSelector.remove();
 		editingBox.toFront();
 	}
-	
+
 	@FXML void cancelCropAction()
 	{
 		editingBox.toFront();
@@ -318,13 +271,10 @@ public class GUI
 	
 	@FXML void confirmResizeAction()
 	{
-		project.storeState();
 		double percentage = Math.round(resizeSlider.getValue());
 		double scaleFactor = percentage / 100;
-		BufferedImage newImage = project.resize(scaleFactor);
-		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
-		project.setHasUnsavedChanges(true);
-		redoAvailable = false;
+		project.resize(scaleFactor);
+		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 		updateGUI();
 		editingBox.toFront();
 	}
@@ -343,13 +293,10 @@ public class GUI
 	
 	@FXML void confirmBrightnessAction()
 	{
-		project.storeState();
 		double brightness = brightnessSlider.getValue() - 100;
 		double contrast = contrastSlider.getValue() / 100;
-		BufferedImage newImage = project.adjustBrightnessContrast(brightness, contrast);
-		imageViewer.update(SwingFXUtils.toFXImage(newImage, null));
-		project.setHasUnsavedChanges(true);
-		redoAvailable = false;
+		project.adjustBrightnessContrast(brightness, contrast);
+		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 		updateGUI();
 		editingBox.toFront();
 	}
@@ -361,7 +308,8 @@ public class GUI
 	}
 		
 	/*
-	 * This function allows the user to select an image file for viewing and editing
+	 * Provides a file chooser to allow the user to select an image file for viewing and editing.
+	 * Creates a new project and resets the GUI.
 	 */
 	private void openFile()
 	{
@@ -411,7 +359,6 @@ public class GUI
 			}
 			
 			editingBox.toFront();
-			redoAvailable = false;
 			saveAsItem.setDisable(false);
 			rotateRightButton.setDisable(false);
 			rotateLeftButton.setDisable(false);
@@ -427,8 +374,8 @@ public class GUI
 	}
 	
 	/**
-	 * This function updates the GUI's labels and buttons as appropriate
-	 * It should be called after any change is made to the GUI, Project, or ImageViewer
+	 * Updates the GUI's labels and buttons as appropriate.
+	 * This should be called after any change is made to the Project or ImageViewer
 	 */
 	private void updateGUI()
 	{
@@ -446,22 +393,19 @@ public class GUI
 			nameLabel.setText(project.getName());
 		}
 		
-		if (project.stateHistoryIsEmpty())
-			undoButton.setDisable(true);
-		else
+		if (project.isUndoAvailable())
 			undoButton.setDisable(false);
-		
-		if (!redoAvailable)
-			project.clearUndoHistory();
-			
-		if (project.undoHistoryIsEmpty())
-			redoButton.setDisable(true);
 		else
+			undoButton.setDisable(true);
+			
+		if (project.isRedoAvailable())
 			redoButton.setDisable(false);
+		else
+			redoButton.setDisable(true);
 	}
 	
 	/**
-	 * Shows an alert in the GUI
+	 * Displays an alert in the GUI.
 	 * @param message The text to be shown in the alert
 	 */
 	private void createAlert(String message)
@@ -476,7 +420,7 @@ public class GUI
 	}
 	
 	/**
-	 * This method is used to set a reference to the stage from the Main class.
+	 * Sets a reference to the stage from the Main class.
 	 * It also defines the application's behavior when the stage is closed.
 	 */
 	public void setStage(Stage stage)

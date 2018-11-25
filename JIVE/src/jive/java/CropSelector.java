@@ -63,8 +63,8 @@ public class CropSelector
         pane.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressEvent);
         pane.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDragEvent);
         pane.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleaseEvent);
-        pane.widthProperty().addListener(listener);
-        pane.heightProperty().addListener(listener);
+        pane.widthProperty().addListener(sizeListener);
+        pane.heightProperty().addListener(sizeListener);
         
         rectangle = new Rectangle();
         rectangle.setStroke(Color.ROYALBLUE);
@@ -219,7 +219,8 @@ public class CropSelector
         }
     };
     
-    ChangeListener<Number> listener = (observable, oldValue, newValue) -> 
+    //Actions performed during window resizing when the crop selector is enabled
+    ChangeListener<Number> sizeListener = (observable, oldValue, newValue) -> 
     {
     	pane.getChildren().remove(rectangle);
     	confirmButton.setDisable(true);

@@ -7,9 +7,9 @@ import javafx.scene.layout.BorderPane;
 
 /**
  * ImageViewer displays JavaFX images in a BorderPane.
- * Images are centered and resized if necessary.
+ * Images are centered and resized as necessary.
  * The ImageView binding is updated dynamically during window resizing.
- * Image ratio is preserved during resizing.
+ * Aspect ratio is always preserved during resizing.
  * 
  * @author Devon Hunter
  *
@@ -18,25 +18,6 @@ public class ImageViewer extends BorderPane
 {
 	Image image;
 	ImageView imageView;
-	
-	//The resizeListener dynamically binds or unbinds imageView's fit properties according to window size
-	ChangeListener<Number> resizeListener = (observable, oldValue, newValue) -> {
-		if (image != null)
-		{
-			if (image.getHeight() > this.getHeight() || image.getWidth() > this.getWidth())
-			{
-				imageView.fitHeightProperty().bind(this.heightProperty());
-				imageView.fitWidthProperty().bind(this.widthProperty());
-			}
-			else
-			{
-				imageView.fitHeightProperty().unbind();
-				imageView.fitWidthProperty().unbind();
-				imageView.setFitHeight(image.getHeight());
-				imageView.setFitWidth(image.getWidth());
-			}
-		}
-	};
 	
 	public ImageViewer()
 	{
@@ -72,4 +53,25 @@ public class ImageViewer extends BorderPane
 		imageView.setImage(image);
 		this.setCenter(imageView);
 	}
+	
+	/**
+	 * The resizeListener dynamically binds or unbinds imageView's fit properties according to window size
+	 */
+	ChangeListener<Number> resizeListener = (observable, oldValue, newValue) -> {
+		if (image != null)
+		{
+			if (image.getHeight() > this.getHeight() || image.getWidth() > this.getWidth())
+			{
+				imageView.fitHeightProperty().bind(this.heightProperty());
+				imageView.fitWidthProperty().bind(this.widthProperty());
+			}
+			else
+			{
+				imageView.fitHeightProperty().unbind();
+				imageView.fitWidthProperty().unbind();
+				imageView.setFitHeight(image.getHeight());
+				imageView.setFitWidth(image.getWidth());
+			}
+		}
+	};
 }
