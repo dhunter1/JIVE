@@ -71,10 +71,20 @@
 	-fx-graphic-text-gap: 15;
 }
 
+/*Slider styling for resize/brightness/contrast functions */
 .slider .thumb {
 	-fx-background-color: #f2f2f2;
 }
 
 .slider .track {
 	-fx-control-inner-background: black;
+}
+
+/*Make previous/next buttons visible on hover */
+#previousButton:hover {
+	-fx-opacity: .8;
+}
+
+#nextButton:hover {
+	-fx-opacity: .8;
 }

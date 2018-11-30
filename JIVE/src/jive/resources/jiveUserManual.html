@@ -52,10 +52,36 @@
 
 		<p> 
 			Window resizing is handled by your operating system, including snap resizing. 
-			If an image is loaded it will be resized as necessary to fit into the viewer. The aspect ratio will always be preserved.
+			If an image is loaded it will be resized as necessary to fit into the viewer. 
+			The aspect ratio will always be preserved.
+		</p>
+		
+		<h2> 1.3. &nbsp;&nbsp;The Photo Reel </h2>
+		
+		<p>
+			After an image is loaded, other image files in the same directory are loaded to the photo reel. The photo reel bypasses the file chooser
+			and loads the next or previous image from the directory into JIVE. Images are loaded in alphabetical order. 
+			The previous or next image can be loaded by pressing Ctrl+Left or Ctrl+Right, respectively. 
+			Or, by using the following buttons:
+			<br>
+			<div class="image">
+			<img src="./icons/PreviousIcon.png" hspace="40">
+			<img src="./icons/NextIcon.png" hspace="40">
+			</div>
+		</p>
+		<p>
+			The buttons are only displayed when the mouse is hovered over them. The relative location is shown below:
+			<br>
+			<div class="image">
+			<img src="./screenshots/PhotoReel.png" width="90%" height="90%">
+			</div>
+		</p>
+		<p>
+			If there are no next or previous pictures, the corresponding button will not be displayed and the keyboard shortcut will be disabled. 
+			If the current image has unsaved changes, you will be prompted to save the changes before the new image is loaded.
 		</p>
 
-		<h2> 1.3. &nbsp;&nbsp;Keyboard Shortcuts </h2>
+		<h2> 1.4. &nbsp;&nbsp;Keyboard Shortcuts </h2>
 
 		<p> 
 			Keyboard shortcuts for certain functions are noted in the relevant sections of this manual. 
@@ -65,6 +91,8 @@
 				<li>Ctrl+S: Save the current project</li>
 				<li>Ctrl+Z: Undo</li>
 				<li>Ctrl+Y: Redo</li>
+				<li>Ctrl+Left: Previous image</li>
+				<li>Ctrl+Right: Next image</li>
 			</ul>
 		</p>
 		

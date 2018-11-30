@@ -46,6 +46,7 @@ public class Controller
 	ImageViewer imageViewer;
 	Project project;
 	CropSelector cropSelector;
+	PhotoReel photoReel;
 	
 	@FXML private AnchorPane mainPane;	
 	@FXML private AnchorPane viewerPane;
@@ -58,6 +59,8 @@ public class Controller
 	@FXML private Button saveButton;
 	@FXML private Button undoButton;
 	@FXML private Button redoButton;
+	@FXML private Button previousButton;
+	@FXML private Button nextButton;
 	@FXML private Button rotateRightButton;
 	@FXML private Button rotateLeftButton;
 	@FXML private Button flipHorizontalButton;
@@ -95,28 +98,6 @@ public class Controller
 		resizeSlider.valueProperty().addListener(resizeSliderListener);
 		brightnessSlider.valueProperty().addListener(brightnessSliderListener);
 		contrastSlider.valueProperty().addListener(contrastSliderListener);
-		
-		mainPane.setOnKeyPressed(event -> 
-		{
-			if (event.getCode() == KeyCode.O && event.isControlDown())
-				openFile();
-			
-			if (event.getCode() == KeyCode.S && event.isControlDown())
-			{
-				if (project != null && project.hasUnsavedChanges())
-					saveButtonAction();
-			}
-			if (event.getCode() == KeyCode.Z && event.isControlDown())
-			{
-				if (project != null && !project.isUndoAvailable())
-					undoButtonAction();
-			}
-			if (event.getCode() == KeyCode.Y && event.isControlDown())
-			{
-				if (project.isRedoAvailable())
-					redoButtonAction();
-			}
-		});
 	}
 		
 	/**
@@ -160,7 +141,7 @@ public class Controller
 			if (project.saveAs(savedFile))
 				updateGUI();
 			else
-				createAlert("Error: could not save image");
+				createErrorAlert("Error: could not save image");
 		}		
 	}
 	
@@ -192,7 +173,7 @@ public class Controller
 		if (project.save())
 			updateGUI();
 		else
-			createAlert("Error: could not save image");
+			createErrorAlert("Error: could not save image");
 	}
 	
 	@FXML void undoButtonAction() 
@@ -207,6 +188,22 @@ public class Controller
 		project.redo();
 		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 		updateGUI();
+	}
+	
+	@FXML void previousButtonAction()
+	{
+		if (project.hasUnsavedChanges())
+			createUnsavedChangesAlert();
+		
+		loadFile(photoReel.getPrevious());
+	}
+	
+	@FXML void nextButtonAction()
+	{
+		if (project.hasUnsavedChanges())
+			createUnsavedChangesAlert();
+		
+		loadFile(photoReel.getNext());
 	}
 	
 	@FXML void rotateRightAction() 
@@ -240,7 +237,7 @@ public class Controller
 	@FXML void cropAction() 
 	{
 		cropBox.toFront();
-		cropSelector = new CropSelector(imageViewer, imageViewer.imageView, confirmCropButton);
+		cropSelector = new CropSelector(imageViewer, imageViewer.getImageView(), confirmCropButton);
 	}
 	
 	@FXML void confirmCropAction()
@@ -306,6 +303,41 @@ public class Controller
 		editingBox.toFront();
 		imageViewer.update(SwingFXUtils.toFXImage(project.getImage(), null));
 	}
+	
+	/**
+	 * Sets a reference to the stage from the Main class
+	 * and adds keyboard shortcuts and exit event logic.
+	 */
+	public void setUp(Stage stage)
+	{
+		this.stage = stage;
+		
+		stage.getScene().setOnKeyPressed(event ->
+		{
+			if (event.isControlDown())
+			{
+				KeyCode key = event.getCode();
+				if (key == KeyCode.O)
+					openFile();
+				if (key == KeyCode.S && !saveButton.isDisable())
+					saveButtonAction();
+				if (key == KeyCode.Z && !undoButton.isDisable())
+					undoButtonAction();
+				if (key == KeyCode.Y && !redoButton.isDisable())
+					redoButtonAction();
+				if (key == KeyCode.LEFT && !previousButton.isDisable())
+					previousButtonAction();
+				if (key == KeyCode.RIGHT && !nextButton.isDisable())
+					nextButtonAction();
+			}
+		});
+				
+		stage.setOnCloseRequest(event ->
+		{
+			if (project != null && project.hasUnsavedChanges())
+				createUnsavedChangesAlert();
+		});
+	}
 		
 	/*
 	 * Provides a file chooser to allow the user to select an image file for viewing and editing.
@@ -313,8 +345,7 @@ public class Controller
 	 */
 	private void openFile()
 	{
-		FileChooser fileChooser = new FileChooser();
-		
+		FileChooser fileChooser = new FileChooser();		
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Image Files", COMPATIBLE_FORMATS);
 		fileChooser.getExtensionFilters().add(filter);
 		
@@ -328,9 +359,7 @@ public class Controller
 		File imageFile = fileChooser.showOpenDialog(stage);
 				
 		if (imageFile != null)
-		{
-			Image image;
-			
+		{			
 			//Users can enter non-image files manually, so additional validation is done here
 			String fileName = imageFile.getName();
 			int extensionIndex = fileName.lastIndexOf(".");
@@ -338,39 +367,45 @@ public class Controller
 			
 			if (!(COMPATIBLE_FORMATS.contains("*." + extension)))
 			{
-				createAlert("JIVE does not support ." + extension + " files.");
+				createErrorAlert("JIVE does not support ." + extension + " files.");
 				return;
 			}
 			
-			try
-			{
-				image = new Image(imageFile.toURI().toURL().toExternalForm());
-				imageViewer.update(image);
-				project = new Project(imageFile);				
-				updateGUI();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-				imageViewer.update(null);
-				project = null;
-				createAlert("Error: could not read image file.");
-				return;				
-			}
-			
-			editingBox.toFront();
-			saveAsItem.setDisable(false);
-			rotateRightButton.setDisable(false);
-			rotateLeftButton.setDisable(false);
-			flipHorizontalButton.setDisable(false);
-			flipVerticalButton.setDisable(false);
-			cropButton.setDisable(false);
-			resizeButton.setDisable(false);
-			editBrightnessButton.setDisable(false);
-			
-			if (cropSelector != null)
-				cropSelector.remove();
+			loadFile(imageFile);
 		}
+	}
+	
+	private void loadFile(File imageFile)
+	{
+		try
+		{
+			Image image = new Image(imageFile.toURI().toURL().toExternalForm());
+			imageViewer.update(image);
+			project = new Project(imageFile);
+			photoReel = new PhotoReel(imageFile);
+			updateGUI();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			imageViewer.update(null);
+			project = null;
+			createErrorAlert("Error: could not read image file.");
+			return;				
+		}
+		
+		saveAsItem.setDisable(false);
+		rotateRightButton.setDisable(false);
+		rotateLeftButton.setDisable(false);
+		flipHorizontalButton.setDisable(false);
+		flipVerticalButton.setDisable(false);
+		cropButton.setDisable(false);
+		resizeButton.setDisable(false);
+		editBrightnessButton.setDisable(false);
+		editingBox.toFront();
+		
+		if (cropSelector != null)
+			cropSelector.remove();
 	}
 	
 	/**
@@ -402,13 +437,23 @@ public class Controller
 			redoButton.setDisable(false);
 		else
 			redoButton.setDisable(true);
+		
+		if (photoReel.hasNext())
+			nextButton.setDisable(false);
+		else
+			nextButton.setDisable(true);
+		
+		if (photoReel.hasPrevious())
+			previousButton.setDisable(false);
+		else
+			previousButton.setDisable(true);
 	}
 	
 	/**
-	 * Displays an alert in the GUI.
+	 * Displays an error alert in the GUI.
 	 * @param message The text to be shown in the alert
 	 */
-	private void createAlert(String message)
+	private void createErrorAlert(String message)
 	{
 		Alert alert = new Alert(AlertType.ERROR, message);
 		alert.setHeaderText(null);
@@ -420,36 +465,27 @@ public class Controller
 	}
 	
 	/**
-	 * Sets a reference to the stage from the Main class.
-	 * It also defines the application's behavior when the stage is closed.
+	 * Displays an alert prompting the user to save unsaved changes.
+	 * The changes are saved if the user responds 'yes'
 	 */
-	public void setStage(Stage stage)
+	private void createUnsavedChangesAlert()
 	{
-		this.stage = stage;
+		ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+		ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
 		
-		stage.setOnCloseRequest(event ->
-		{
-			if (project != null && project.hasUnsavedChanges())
-			{
-				ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
-				ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
-				
-				Alert alert = new Alert(AlertType.CONFIRMATION, 
-						"Do you want to save changes to " + project.getName() + "?",
-						yesButton, noButton);
-				
-				alert.setHeaderText(null);
-				alert.setTitle("JIVE - Save Changes");
-				
-				GaussianBlur blur = new GaussianBlur(7);
-				mainPane.setEffect(blur);
-				
-				Optional<ButtonType> response = alert.showAndWait();
-				
-				if (response.get() == yesButton)
-					project.save();
-			}
-		});
+		Alert alert = new Alert(AlertType.CONFIRMATION, 
+				"Do you want to save changes to " + project.getName() + "?",
+				yesButton, noButton);
+		
+		alert.setHeaderText(null);
+		alert.setTitle("JIVE - Save Changes");
+		GaussianBlur blur = new GaussianBlur(5);
+		mainPane.setEffect(blur);
+		Optional<ButtonType> response = alert.showAndWait();
+		mainPane.setEffect(null);
+		
+		if (response.get() == yesButton)
+			project.save();
 	}
 	
 	/**
@@ -491,8 +527,6 @@ public class Controller
 	
 	/**
 	 * This listener updates the contrastSlider label and previews contrast changes.
-	 * The adjustment value is divided by 100 to calculate the appropriate
-	 * value to pass to adjustBrightnessContrast()
 	 */
 	ChangeListener<Number> contrastSliderListener = (observable, oldValue, newValue) ->
 	{

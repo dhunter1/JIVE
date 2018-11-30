@@ -23,14 +23,14 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/jive/resources/view.fxml"));
 			Parent root = (Parent)loader.load();
 			Controller gui = (Controller) loader.getController();
-			gui.setStage(primaryStage);					//Controller class needs reference to Stage for fileChooser	
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("/jive/resources/view.css").toExternalForm());
 			primaryStage.setTitle("JIVE");
 			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/jive/resources/icons/JiveIcon.png")));
 			primaryStage.setScene(scene);
 			primaryStage.setMinWidth(800);
-			primaryStage.setMinHeight(250);
+			primaryStage.setMinHeight(325);
+			gui.setUp(primaryStage);
 			primaryStage.show();
 		} 
 		catch(Exception e) 

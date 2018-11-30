@@ -16,8 +16,8 @@ import javafx.scene.layout.BorderPane;
  */
 public class ImageViewer extends BorderPane
 {
-	Image image;
-	ImageView imageView;
+	private Image image;
+	private ImageView imageView;
 	
 	public ImageViewer()
 	{
@@ -52,6 +52,15 @@ public class ImageViewer extends BorderPane
 		
 		imageView.setImage(image);
 		this.setCenter(imageView);
+	}
+	
+	/**
+	 * Gets the ImageViewer's ImageView attribute
+	 * @return the current ImageView
+	 */
+	public ImageView getImageView()
+	{
+		return imageView;
 	}
 	
 	/**
