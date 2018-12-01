@@ -10,7 +10,6 @@ import java.util.Optional;
 import javafx.beans.value.ChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -25,7 +24,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -47,6 +45,7 @@ public class Controller
 	Project project;
 	CropSelector cropSelector;
 	PhotoReel photoReel;
+	UserManual userManual;
 	
 	@FXML private AnchorPane mainPane;	
 	@FXML private AnchorPane viewerPane;
@@ -86,6 +85,7 @@ public class Controller
 	
 	public void initialize()
 	{		
+		userManual = new UserManual();
 		imageViewer = new ImageViewer();
 		viewerPane.getChildren().add(imageViewer);
 		
@@ -150,22 +150,7 @@ public class Controller
 	 */
 	@FXML void helpAction() 
 	{
-		String helpFile = getClass().getResource("/jive/resources/jiveUserManual.html").toExternalForm();
-		Stage helpStage = new Stage();
-		StackPane pane = new StackPane();
-		WebView webView = new WebView();
-		Scene root = new Scene(pane);
-		
-		helpStage.setResizable(false);
-		helpStage.setTitle("JIVE - User Manual");
-		helpStage.setScene(root);
-		helpStage.getIcons().add(new Image(getClass().getResourceAsStream("/jive/resources/icons/JiveIcon.png")));
-		
-		webView.getEngine().setUserStyleSheetLocation(getClass().getResource("/jive/resources/usermanual.css").toString());
-		webView.getEngine().load(helpFile);
-		pane.getChildren().add(webView);
-		
-		helpStage.show();
+		userManual.openUserManual();
 	}
 	
 	@FXML void saveButtonAction() 
@@ -458,6 +443,7 @@ public class Controller
 		Alert alert = new Alert(AlertType.ERROR, message);
 		alert.setHeaderText(null);
 		alert.setTitle("JIVE - Error");
+		alert.initOwner(stage);
 		GaussianBlur blur = new GaussianBlur(5);
 		mainPane.setEffect(blur);
 		alert.showAndWait();
@@ -479,6 +465,7 @@ public class Controller
 		
 		alert.setHeaderText(null);
 		alert.setTitle("JIVE - Save Changes");
+		alert.initOwner(stage);
 		GaussianBlur blur = new GaussianBlur(5);
 		mainPane.setEffect(blur);
 		Optional<ButtonType> response = alert.showAndWait();

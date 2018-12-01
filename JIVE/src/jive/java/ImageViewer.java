@@ -36,20 +36,7 @@ public class ImageViewer extends BorderPane
 	public void update(Image newImage)
 	{
 		image = newImage;
-		
-		if (image.getHeight() > this.getHeight() || image.getWidth() > this.getWidth())
-		{
-			imageView.fitHeightProperty().bind(this.heightProperty());
-			imageView.fitWidthProperty().bind(this.widthProperty());
-		}
-		else
-		{
-			imageView.fitHeightProperty().unbind();
-			imageView.fitWidthProperty().unbind();
-			imageView.setFitHeight(image.getHeight());
-			imageView.setFitWidth(image.getWidth());
-		}
-		
+		adjustImageBinding();
 		imageView.setImage(image);
 		this.setCenter(imageView);
 	}
@@ -64,23 +51,31 @@ public class ImageViewer extends BorderPane
 	}
 	
 	/**
-	 * The resizeListener dynamically binds or unbinds imageView's fit properties according to window size
+	 * This function binds or unbinds the imageView's fit properties as necessary
+	 */
+	private void adjustImageBinding()
+	{
+		if (image.getHeight() > this.getHeight() || image.getWidth() > this.getWidth())
+		{
+			imageView.fitHeightProperty().bind(this.heightProperty());
+			imageView.fitWidthProperty().bind(this.widthProperty());
+		}
+		else
+		{
+			imageView.fitHeightProperty().unbind();
+			imageView.fitWidthProperty().unbind();
+			imageView.setFitHeight(image.getHeight());
+			imageView.setFitWidth(image.getWidth());
+		}
+	}
+	
+	/**
+	 * Dynamically binds or unbinds imageView's fit properties according to window size
 	 */
 	ChangeListener<Number> resizeListener = (observable, oldValue, newValue) -> {
 		if (image != null)
 		{
-			if (image.getHeight() > this.getHeight() || image.getWidth() > this.getWidth())
-			{
-				imageView.fitHeightProperty().bind(this.heightProperty());
-				imageView.fitWidthProperty().bind(this.widthProperty());
-			}
-			else
-			{
-				imageView.fitHeightProperty().unbind();
-				imageView.fitWidthProperty().unbind();
-				imageView.setFitHeight(image.getHeight());
-				imageView.setFitWidth(image.getWidth());
-			}
+			adjustImageBinding();
 		}
 	};
 }

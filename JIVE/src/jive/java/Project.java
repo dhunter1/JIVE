@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
  * Project consists of methods to edit BufferedImage objects and manage editing projects.
  * <br><br>
  * Actual image editing is performed by the ImageEditor class and the
- * changes are applied to the class's bufferedImage attribute.
+ * changes are applied to the Project's bufferedImage attribute.
  * <br><br>
  * Images can be saved to file or converted to different raster file formats (JPEG, PNG, BMP, and GIF).
  * <br><br>
@@ -32,7 +32,7 @@ public class Project
 	private String fileExtension;
 	private Stack<BufferedImage> stateHistory;
 	private Stack<BufferedImage> undoHistory;	
-	private boolean hasUnsavedChanges;
+	private int changesSinceSave;
 	
 	public Project(File imageFile) throws IOException
 	{
@@ -41,7 +41,7 @@ public class Project
 		fileExtension = findFileExtension(imageFile);				
 		stateHistory = new Stack<BufferedImage>();
 		undoHistory = new Stack<BufferedImage>();
-		hasUnsavedChanges = false;
+		changesSinceSave = 0;
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class Project
 		try
 		{
 			ImageIO.write(bufferedImage, fileExtension, imageFile);
-			hasUnsavedChanges = false;
+			changesSinceSave = 0;
 			return true;
 		}
 		catch (Exception e)
@@ -113,7 +113,7 @@ public class Project
 	{
 		undoHistory.push(bufferedImage);
 		bufferedImage = stateHistory.pop();
-		hasUnsavedChanges = true;		
+		--changesSinceSave;
 	}
 	
 	/**
@@ -124,7 +124,7 @@ public class Project
 	{
 		stateHistory.push(bufferedImage);
 		bufferedImage = undoHistory.pop();
-		hasUnsavedChanges = true;
+		++changesSinceSave;
 	}
 	
 	/**
@@ -137,8 +137,8 @@ public class Project
 	{
 		stateHistory.push(bufferedImage);
 		bufferedImage = imageEditor.rotateRight(bufferedImage);
-		hasUnsavedChanges = true;
 		undoHistory.clear();
+		++changesSinceSave;
 	}
 	
 	/**
@@ -151,8 +151,8 @@ public class Project
 	{
 		stateHistory.push(bufferedImage);
 		bufferedImage = imageEditor.rotateLeft(bufferedImage);
-		hasUnsavedChanges = true;
 		undoHistory.clear();
+		++changesSinceSave;
 	}
 	
 	/**
@@ -165,8 +165,8 @@ public class Project
 	{
 		stateHistory.push(bufferedImage);
 		bufferedImage = imageEditor.flipHorizontal(bufferedImage);
-		hasUnsavedChanges = true;
 		undoHistory.clear();
+		++changesSinceSave;
 	}
 	
 	/**
@@ -179,8 +179,8 @@ public class Project
 	{
 		stateHistory.push(bufferedImage);
 		bufferedImage = imageEditor.flipVertical(bufferedImage);
-		hasUnsavedChanges = true;
 		undoHistory.clear();
+		++changesSinceSave;
 	}
 	
 	/**
@@ -198,8 +198,8 @@ public class Project
 	{
 		stateHistory.push(bufferedImage);
 		bufferedImage = imageEditor.crop(bufferedImage, x, y, width, height);
-		hasUnsavedChanges = true;
 		undoHistory.clear();
+		++changesSinceSave;
 	}
 	
 	/**
@@ -213,8 +213,8 @@ public class Project
 	{
 		stateHistory.push(bufferedImage);
 		bufferedImage = imageEditor.resize(bufferedImage, scaleFactor);
-		hasUnsavedChanges = true;
 		undoHistory.clear();
+		++changesSinceSave;
 	}
 	
 	/**
@@ -234,8 +234,8 @@ public class Project
 	{
 		stateHistory.push(bufferedImage);
 		bufferedImage = imageEditor.adjustBrightnessContrast(bufferedImage, brightnessAdjustment, contrastAdjustment);
-		hasUnsavedChanges = true;
 		undoHistory.clear();
+		++changesSinceSave;
 	}
 	
 	/**
@@ -279,7 +279,7 @@ public class Project
 	 */
 	public boolean hasUnsavedChanges()
 	{
-		return hasUnsavedChanges;
+		return changesSinceSave != 0;
 	}
 	
 	

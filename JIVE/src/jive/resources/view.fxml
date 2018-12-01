@@ -31,9 +31,9 @@
       </Button>
       <AnchorPane fx:id="controlPane" layoutX="5.0" layoutY="-2.0" prefHeight="46.0" prefWidth="1117.0" style="-fx-background-color: black;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER_RIGHT" prefHeight="46.0" prefWidth="328.0" style="-fx-background-color: black;" AnchorPane.rightAnchor="5.0">
+            <HBox alignment="CENTER_RIGHT" prefHeight="46.0" prefWidth="483.0" style="-fx-background-color: black;" AnchorPane.rightAnchor="5.0">
                <children>
-                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="187.0" textFill="#f2f2f2">
+                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" prefHeight="46.0" prefWidth="369.0" textAlignment="RIGHT" textFill="#f2f2f2">
                      <font>
                         <Font name="Gill Sans MT" size="15.0" />
                      </font>
@@ -41,7 +41,7 @@
                         <Insets left="5.0" right="10.0" />
                      </HBox.margin>
                   </Label>
-                  <Label fx:id="sizeLabel" alignment="CENTER_RIGHT" prefHeight="44.0" prefWidth="90.0" textFill="#f2f2f2">
+                  <Label fx:id="sizeLabel" alignment="CENTER_RIGHT" prefHeight="44.0" prefWidth="116.0" textAlignment="RIGHT" textFill="#f2f2f2">
                      <font>
                         <Font name="Gill Sans MT" size="15.0" />
                      </font>
