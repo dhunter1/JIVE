@@ -8,14 +8,16 @@ import java.util.List;
  * PhotoReel loads all image files from a directory into an array
  * and keeps track of the current position within the directory.
  * 
+ * Photos are sorted alphabetically on the reel.
+ * 
  * @author Devon Hunter
  *
  */
 public class PhotoReel
 {
-	final List<String> COMPATIBLE_FORMATS = Arrays.asList(".jpg", ".png", ".bmp", ".gif");
-	File[] directoryImages;
-	int currentPosition;
+	private final List<String> COMPATIBLE_FORMATS = Arrays.asList(".jpg", ".png", ".bmp", ".gif");
+	private File[] directoryImages;
+	private int currentPosition;
 	
 	/**
 	 * Gets every image file in imageFile's directory, stores the files in alphabetical order,

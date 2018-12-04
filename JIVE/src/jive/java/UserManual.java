@@ -6,13 +6,22 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+/**
+ * This class is the user manual for JIVE.
+ * 
+ * The manual is an HTML document that is
+ * displayed in a new stage containing a WebView.
+ * 
+ * @author Devon
+ *
+ */
 public class UserManual
 {
-	String manual = getClass().getResource("/jive/resources/jiveUserManual.html").toExternalForm();
-	Stage stage = new Stage();
-	StackPane pane = new StackPane();
-	WebView webView = new WebView();
-	Scene root = new Scene(pane);
+	private String manual = getClass().getResource("/jive/resources/jiveUserManual.html").toExternalForm();
+	private Stage stage = new Stage();
+	private StackPane pane = new StackPane();
+	private WebView webView = new WebView();
+	private Scene root = new Scene(pane);
 	
 	public UserManual()
 	{
@@ -25,6 +34,12 @@ public class UserManual
 		pane.getChildren().add(webView);
 	}
 	
+	/**
+	 * Launches a new stage containing the user manual.
+	 * 
+	 * If the user manual stage is already open it is
+	 * brought to the front of the screen.
+	 */
 	public void openUserManual()
 	{
 		if (stage.isShowing())

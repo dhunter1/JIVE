@@ -85,6 +85,7 @@ public class CropSelector
         displayHeight = Math.min(image.getFitHeight(), image.getFitWidth() / aspectRatio);
     }
     
+    //Store the starting X, Y coordinates when the mouse is pressed
     EventHandler<MouseEvent> mousePressEvent = new EventHandler<MouseEvent>()
     {
         @Override
@@ -99,9 +100,11 @@ public class CropSelector
             
             bounds = image.getBoundsInParent();
             
+            //illegalStart is used to stop mouseDragEvent from drawing a rectangle
+            //that is started outside of the imageView
             if (!bounds.contains(event.getX(), event.getY()))
             {
-            	illegalStart = true;	//illegalStart is used to stop mouseDragEvent from drawing a rectangle
+            	illegalStart = true;
             	rectangle.setWidth(0);
             	rectangle.setHeight(0);
             	return;
@@ -111,6 +114,7 @@ public class CropSelector
             	illegalStart = false;
             }
             
+            //Adjust bounds if they have changed
             if (rectangleMinBoundX != bounds.getMinX() || rectangleMinBoundY != bounds.getMinY())
             {	
             	rectangleMinBoundX = bounds.getMinX();
@@ -131,6 +135,7 @@ public class CropSelector
         }
     };
 
+    //Adjust the rectangle size as the mouse is dragged
     EventHandler<MouseEvent> mouseDragEvent = new EventHandler<MouseEvent>()
     {
         @Override
@@ -179,6 +184,7 @@ public class CropSelector
         }
     };
 
+    //Calculate and store the crop area when the mouse is released 
     EventHandler<MouseEvent> mouseReleaseEvent = new EventHandler<MouseEvent>()
     {
         @Override

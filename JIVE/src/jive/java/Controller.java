@@ -38,7 +38,7 @@ import javafx.stage.Stage;
  */
 public class Controller
 {	
-	final List<String> COMPATIBLE_FORMATS = Arrays.asList("*.jpg", "*.png", "*.bmp", "*.gif");
+	private final List<String> COMPATIBLE_FORMATS = Arrays.asList("*.jpg", "*.png", "*.bmp", "*.gif");
 	
 	Stage stage;
 	ImageViewer imageViewer;
@@ -153,6 +153,9 @@ public class Controller
 		userManual.openUserManual();
 	}
 	
+	/**
+	 * Saves the project to disk
+	 */
 	@FXML void saveButtonAction() 
 	{
 		if (project.save())
@@ -161,6 +164,9 @@ public class Controller
 			createErrorAlert("Error: could not save image");
 	}
 	
+	/**
+	 * Undo the last editing operation
+	 */
 	@FXML void undoButtonAction() 
 	{
 		project.undo();
@@ -168,6 +174,9 @@ public class Controller
 		updateGUI();
 	}
 	
+	/**
+	 * Redo the last un-done operation
+	 */
 	@FXML void redoButtonAction() 
 	{
 		project.redo();
@@ -175,6 +184,9 @@ public class Controller
 		updateGUI();
 	}
 	
+	/**
+	 * Opens the previous image in the current directory
+	 */
 	@FXML void previousButtonAction()
 	{
 		if (project.hasUnsavedChanges())
@@ -183,6 +195,9 @@ public class Controller
 		loadFile(photoReel.getPrevious());
 	}
 	
+	/**
+	 * Opens the next image in the current directory
+	 */
 	@FXML void nextButtonAction()
 	{
 		if (project.hasUnsavedChanges())
@@ -191,6 +206,9 @@ public class Controller
 		loadFile(photoReel.getNext());
 	}
 	
+	/**
+	 * Rotates the image clockwise
+	 */
 	@FXML void rotateRightAction() 
 	{
 		project.rotateRight();
@@ -198,6 +216,9 @@ public class Controller
 		updateGUI();
 	}
 	
+	/**
+	 * Rotates the image counter-clockwise
+	 */
 	@FXML void rotateLeftAction() 
 	{
 		project.rotateLeft();
@@ -205,6 +226,9 @@ public class Controller
 		updateGUI();
 	}
 	
+	/**
+	 * Mirrors the image horizontally
+	 */
 	@FXML void flipHorizontalAction() 
 	{
 		project.flipHorizontal();
@@ -212,6 +236,9 @@ public class Controller
 		updateGUI();
 	}
 	
+	/**
+	 * Mirrors the image vertically
+	 */
 	@FXML void flipVerticalAction() 
 	{
 		project.flipVertical();
@@ -219,12 +246,18 @@ public class Controller
 		updateGUI();
 	}
 	
+	/**
+	 * Opens the crop tool
+	 */
 	@FXML void cropAction() 
 	{
 		cropBox.toFront();
 		cropSelector = new CropSelector(imageViewer, imageViewer.getImageView(), confirmCropButton);
 	}
 	
+	/**
+	 * Commences the crop operation
+	 */
 	@FXML void confirmCropAction()
 	{
 		int x = cropSelector.getCropX();
@@ -238,12 +271,18 @@ public class Controller
 		editingBox.toFront();
 	}
 
+	/**
+	 * Closes the crop tool
+	 */
 	@FXML void cancelCropAction()
 	{
 		editingBox.toFront();
 		cropSelector.remove();
 	}
 	
+	/**
+	 * Opens the resize tool
+	 */
 	@FXML void resizeAction() 
 	{
 		resizeSlider.setValue(resizeSlider.getMax());
@@ -251,6 +290,9 @@ public class Controller
 		resizeBox.toFront();
 	}
 	
+	/**
+	 * Commences the resize operations
+	 */
 	@FXML void confirmResizeAction()
 	{
 		double percentage = Math.round(resizeSlider.getValue());
@@ -261,11 +303,17 @@ public class Controller
 		editingBox.toFront();
 	}
 	
+	/**
+	 * Closes the resize tool
+	 */
 	@FXML void cancelResizeAction()
 	{
 		editingBox.toFront();
 	}
 	
+	/**
+	 * Opens the brightness/contrast tool
+	 */
 	@FXML void editBrightnessAction() 
 	{
 		brightnessSlider.setValue(100);
@@ -273,6 +321,9 @@ public class Controller
 		brightnessBox.toFront();
 	}
 	
+	/**
+	 * Commences the brightness/contrast adjustment
+	 */
 	@FXML void confirmBrightnessAction()
 	{
 		double brightness = brightnessSlider.getValue() - 100;
@@ -283,6 +334,9 @@ public class Controller
 		editingBox.toFront();
 	}
 	
+	/**
+	 * Closes the brightness/contrast tool
+	 */
 	@FXML void cancelBrightnessAction()
 	{
 		editingBox.toFront();
@@ -360,6 +414,12 @@ public class Controller
 		}
 	}
 	
+	/**
+	 * Loads the file into JIVE.
+	 * Creates a new Project and PhotoReel and updates the GUI.
+	 * 
+	 * @param imageFile The file to load
+	 */
 	private void loadFile(File imageFile)
 	{
 		try
@@ -508,6 +568,11 @@ public class Controller
 		double contrastValue = contrastSlider.getValue() / 100;
 		brightnessLabel.setText(String.valueOf((int) brightnessValue));
 		
+		//This method of previewing is CPU and RAM intensive.
+		//A better method would be to preview the adjustments on the JavaFX Image
+		//using ColorAdjust.setBrightness(), then implement a custom RescaleOp in the ImageEditor
+		//class that uses the ColorAdjust brightness algorithm to edit the underlying bufferedImage. 
+		//Oracle hasn't published the algorithm used in ColorAdjust.setBrightness().
 		BufferedImage previewImage = project.previewBrightnessContrast(brightnessValue, contrastValue);
 		imageViewer.update(SwingFXUtils.toFXImage(previewImage, null));
 	};
@@ -520,7 +585,7 @@ public class Controller
 		double contrastValue = contrastSlider.getValue() / 100;
 		double brightnessValue = brightnessSlider.getValue() - 100;
 		contrastLabel.setText(String.valueOf((int) (contrastValue * 100 - 100)));
-				
+
 		BufferedImage previewImage = project.previewBrightnessContrast(brightnessValue, contrastValue);
 		imageViewer.update(SwingFXUtils.toFXImage(previewImage, null));
 	};

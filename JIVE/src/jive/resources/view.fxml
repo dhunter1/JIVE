@@ -114,7 +114,7 @@
          <children>
             <HBox fx:id="resizeBox" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: black;">
                <children>
-                  <VBox alignment="CENTER" prefHeight="110.0" prefWidth="122.0">
+                  <VBox alignment="CENTER" prefHeight="110.0" prefWidth="157.0">
                      <children>
                         <Label alignment="CENTER" prefHeight="18.0" prefWidth="130.0" text="New Dimensions:" textFill="#f2f2f2">
                            <font>
@@ -128,11 +128,11 @@
                         </Label>
                      </children>
                      <HBox.margin>
-                        <Insets left="50.0" right="50.0" />
+                        <Insets left="10.0" />
                      </HBox.margin>
                   </VBox>
                   <Slider fx:id="resizeSlider" blockIncrement="1.0" majorTickUnit="1.0" min="1.0" minorTickCount="1" prefHeight="14.0" prefWidth="299.0" snapToTicks="true" value="100.0" />
-                  <Label fx:id="resizePercentLabel" alignment="CENTER" prefHeight="25.0" prefWidth="61.0" text="100%" textFill="#f2f2f2">
+                  <Label fx:id="resizePercentLabel" alignment="CENTER" prefHeight="25.0" prefWidth="54.0" text="100%" textFill="#f2f2f2">
                      <font>
                         <Font name="Gill Sans MT" size="20.0" />
                      </font>
@@ -152,7 +152,7 @@
                         <Tooltip text="Cancel" />
                      </tooltip>
                      <HBox.margin>
-                        <Insets bottom="5.0" left="50.0" right="25.0" top="5.0" />
+                        <Insets bottom="5.0" left="25.0" right="25.0" top="5.0" />
                      </HBox.margin>
                   </Button>
                   <Button fx:id="confirmResizeButton" mnemonicParsing="false" onAction="#confirmResizeAction" prefHeight="85.0" prefWidth="85.0" style="-fx-background-color: black;">
@@ -167,7 +167,7 @@
                         <Tooltip text="Confirm" />
                      </tooltip>
                      <HBox.margin>
-                        <Insets bottom="5.0" left="25.0" right="50.0" top="5.0" />
+                        <Insets bottom="5.0" left="5.0" right="10.0" top="5.0" />
                      </HBox.margin>
                   </Button>
                </children>
