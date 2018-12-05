@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 
 import javax.imageio.ImageIO;
@@ -26,7 +28,9 @@ import javax.imageio.ImageIO;
  */
 public class Project
 {
-	private ImageEditor imageEditor = new ImageEditor();
+	private final List<String> COMPATIBLE_FORMATS = Arrays.asList(".jpg", ".png", ".bmp", ".gif");
+
+	private ImageEditor imageEditor;
 	private BufferedImage bufferedImage;
 	private File imageFile;
 	private String fileExtension;
@@ -36,6 +40,7 @@ public class Project
 	
 	public Project(File imageFile) throws IOException
 	{
+		imageEditor = new ImageEditor();
 		bufferedImage = ImageIO.read(imageFile);		
 		this.imageFile = imageFile;
 		fileExtension = findFileExtension(imageFile);				
@@ -78,6 +83,9 @@ public class Project
 	{
 		String newFileExtension = findFileExtension(newFile);
 		boolean hasAlphaChannel = bufferedImage.getColorModel().hasAlpha();
+				
+		if (!COMPATIBLE_FORMATS.contains("." + newFileExtension))
+			return false;
 		
 		try
 		{
