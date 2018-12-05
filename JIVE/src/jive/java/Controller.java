@@ -466,11 +466,13 @@ public class Controller
 		{
 			saveButton.setDisable(false);
 			nameLabel.setText(project.getName() + "*");
+			stage.setTitle("JIVE - " + project.getName() + "*");
 		}
 		else
 		{
 			saveButton.setDisable(true);
 			nameLabel.setText(project.getName());
+			stage.setTitle("JIVE - " + project.getName());
 		}
 		
 		if (project.isUndoAvailable())
