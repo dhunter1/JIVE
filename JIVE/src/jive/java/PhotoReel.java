@@ -10,6 +10,8 @@ import java.util.List;
  * 
  * Photos are sorted alphabetically on the reel.
  * 
+ * (Requirement 1.4.0)
+ * 
  * @author Devon Hunter
  *
  */
@@ -55,6 +57,7 @@ public class PhotoReel
 	
 	/**
 	 * Gets the next image in the photo reel and updates the current position.
+	 * (Requirement 1.4.1)
 	 * 
 	 * @return The next image file in the directory or null if the current position is
 	 * the last file in the directory.
@@ -74,6 +77,7 @@ public class PhotoReel
 	
 	/**
 	 * Gets the previous image in the photo reel and updates the current position.
+	 * (Requirement 1.4.2)
 	 * 
 	 * @return The previous image file in the directory of null if the current position is
 	 * the beginning of the directory.
@@ -93,6 +97,8 @@ public class PhotoReel
 	
 	/**
 	 * Check if the current position is at the end of the photo reel
+	 * (Requirement 1.4.3)
+	 * 
 	 * @return True if there is a next image to return, false otherwise
 	 */
 	public boolean hasNext()
@@ -105,6 +111,8 @@ public class PhotoReel
 	
 	/**
 	 * Check if the current position is at the beginning of the photo reel
+	 * (Requirement 1.4.4)
+	 * 
 	 * @return True if there is a previous image to return, false otherwise
 	 */
 	public boolean hasPrevious()

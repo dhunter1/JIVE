@@ -22,6 +22,8 @@ import javax.imageio.ImageIO;
  * stacks to store BufferedImage objects in memory until a new project is opened or
  * the ImageEditor instance is destroyed.
  * 
+ * (Requirement 3.0.0)
+ * 
  * @author Devon Hunter
  * @author Casey Brown
  *
@@ -52,6 +54,8 @@ public class Project
 	/**
 	 * Saves the Project's BufferedImage object to disk.
 	 * This function overwrites the bufferedImage's original file.
+	 * (Requirement 3.1.1)
+	 * 
 	 * @return True if successful, false otherwise
 	 */
 	public boolean save()
@@ -75,6 +79,8 @@ public class Project
 	 * 
 	 * The alpha channel is removed and the image is drawn to
 	 * a white background if the new file type doesn't support transparency.
+	 * 
+	 * (Requirements 3.1.2/3.2.1)
 	 * 
 	 * @param newFile The destination file of the bufferedImage
 	 * @return True if successful, false otherwise.
@@ -116,6 +122,7 @@ public class Project
 	/**
 	 * Undo the most recent editing function.
 	 * Reverts the bufferedImage to its previous state.
+	 * (Requirement 3.4.0)
 	 */
 	public void undo()
 	{
@@ -127,6 +134,7 @@ public class Project
 	/**
 	 * Redo the most recent undone action.
 	 * Reapplies the change that was undone.
+	 * (Requirement 3.5.0)
 	 */
 	public void redo()
 	{
@@ -138,6 +146,7 @@ public class Project
 	/**
 	 * Rotates the bufferedImage 90* clockwise and updates relevant
 	 * project attributes.
+	 * (Requirement 2.1.1)
 	 * 
 	 * @see ImageEditor#rotateRight(BufferedImage)
 	 */
@@ -152,6 +161,7 @@ public class Project
 	/**
 	 * Rotates the bufferedImage 90* counter-clockwise and
 	 * updates relevant project attributes.
+	 * (Requirement 2.1.2)
 	 * 
 	 * @see ImageEditor#rotateLeft(BufferedImage)
 	 */
@@ -166,6 +176,7 @@ public class Project
 	/**
 	 * Mirrors the bufferedImage horizontally and updates
 	 * relevant project attributes.
+	 * (Requirement 2.2.1)
 	 * 
 	 * @see ImageEditor#flipHorizontal(BufferedImage)
 	 */
@@ -180,6 +191,7 @@ public class Project
 	/**
 	 * Mirrors the bufferedImage vertically and updates
 	 * relevant project attributes.
+	 * (Requirement 2.2.2)
 	 * 
 	 * @see ImageEditor#flipVertical(BufferedImage)
 	 */
@@ -194,6 +206,7 @@ public class Project
 	/**
 	 * Crops the bufferedImage using the specified coordinates and dimensions
 	 * and updates relevant project attributes.
+	 * (Requirement 2.3.5)
 	 * 
 	 * @param x - The X coordinate of the upper-left corner of the crop area
 	 * @param y - The Y coordinate of the upper-left corner of the crop area
@@ -213,6 +226,7 @@ public class Project
 	/**
 	 * Resizes the bufferedImage by the specified factor and
 	 * updates relevant project attributes.
+	 * (Requirement 2.4.1)
 	 * 
 	 * @param scaleFactor - the percent to resize by (0.0 to 1.0)
 	 * @see ImageEditor#resize(BufferedImage, double)
@@ -231,6 +245,7 @@ public class Project
 	 * <br><br>
 	 * To preview an adjustment without actually making changes to the project,
 	 * use the previewBrightnessContrast() function.
+	 * (Requirement 2.5.0)
 	 * 
 	 * @param brightnessAdjustment - the offset to be applied to each pixel (-100.0 to 100.0)
 	 * @param contrastAdjustment - the value to scale the pixel by (0.0 to 2.0)
@@ -249,6 +264,7 @@ public class Project
 	/**
 	 * Applies brightness and contrast adjustments to the bufferedImage but
 	 * doesn't store the result or modify any project attributes.
+	 * (Requirement 2.5.3)
 	 * 
 	 * @param brightnessAdjustment - the offset to be applied to each pixel (-100.0 to 100.0)
 	 * @param contrastAdjustment - the value to scale each pixel by (0.0 to 2.0)
@@ -265,6 +281,8 @@ public class Project
 	
 	/**
 	 * Checks if there are BufferedImage objects in the undoHistory stack
+	 * (Requirement 3.5.1)
+	 * 
 	 * @return True if the stack is empty, false otherwise.
 	 */
 	public boolean isRedoAvailable()
@@ -274,6 +292,8 @@ public class Project
 	
 	/**
 	 * Checks if there are BufferedImage objects in the stateHistory stack
+	 * (Requirement 3.4.1)
+	 * 
 	 * @return True if the stack is empty, false otherwise.
 	 */
 	public boolean isUndoAvailable()
@@ -293,6 +313,8 @@ public class Project
 	
 	/**
 	 * Get the name of the file of the current project
+	 * (Requirement 1.3.0)
+	 * 
 	 * @return The file name as a string
 	 */
 	public String getName()
@@ -318,6 +340,7 @@ public class Project
 	}
 	
 	/**
+	 * (Requirement 1.3.1)
 	 * @return The height of the class's BufferedImage attribute
 	 */
 	public int getHeight()
@@ -326,6 +349,7 @@ public class Project
 	}
 	
 	/**
+	 * (Requirement 1.3.1)
 	 * @return The width of the class's BufferedImage attribute
 	 */
 	public int getWidth()

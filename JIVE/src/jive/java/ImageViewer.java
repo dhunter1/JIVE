@@ -12,6 +12,8 @@ import javafx.scene.layout.BorderPane;
  * The ImageView binding is updated dynamically during window resizing.
  * Aspect ratio is always preserved during resizing.
  * 
+ * (Requirement 1.2.0)
+ * 
  * @author Devon Hunter
  *
  */
@@ -31,6 +33,7 @@ public class ImageViewer extends BorderPane
 	/**
 	 * Set a new image to be displayed in the ImageViewer.
 	 * Images larger than the pane will be resized to fit, smaller images are shown true-to-size.
+	 * (Requirements 1.2.1/1.2.2)
 	 * 
 	 * @param newImage The image to show in the ImageViewer
 	 */
@@ -72,6 +75,7 @@ public class ImageViewer extends BorderPane
 	
 	/**
 	 * Dynamically binds or unbinds imageView's fit properties according to window size
+	 * (Requirement 1.2.3)
 	 */
 	ChangeListener<Number> resizeListener = (observable, oldValue, newValue) -> {
 		if (image != null)

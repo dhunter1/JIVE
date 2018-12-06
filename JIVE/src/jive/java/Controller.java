@@ -102,6 +102,7 @@ public class Controller
 		
 	/**
 	 * Opens a new file in the viewer and creates a project
+	 * (Requirement 1.1.0)
 	 */
 	@FXML void openFileAction()
 	{
@@ -111,6 +112,7 @@ public class Controller
 	/**
 	 * Provides a native file explorer for the 'Save As' feature to collect
 	 * the necessary input from the user.
+	 * (Requirements 3.1.2/3.1.3/3.2.0)
 	 */
 	@FXML void saveAsAction() 
 	{
@@ -155,6 +157,7 @@ public class Controller
 	
 	/**
 	 * Saves the project to disk
+	 * (Requirement 3.1.1)
 	 */
 	@FXML void saveButtonAction() 
 	{
@@ -166,6 +169,7 @@ public class Controller
 	
 	/**
 	 * Undo the last editing operation
+	 * (Requirement 3.4.0)
 	 */
 	@FXML void undoButtonAction() 
 	{
@@ -176,6 +180,7 @@ public class Controller
 	
 	/**
 	 * Redo the last un-done operation
+	 * (Requirement 3.5.0)
 	 */
 	@FXML void redoButtonAction() 
 	{
@@ -186,6 +191,7 @@ public class Controller
 	
 	/**
 	 * Opens the previous image in the current directory
+	 * (Requirement 1.4.1)
 	 */
 	@FXML void previousButtonAction()
 	{
@@ -197,6 +203,7 @@ public class Controller
 	
 	/**
 	 * Opens the next image in the current directory
+	 * (Requirement 1.4.2)
 	 */
 	@FXML void nextButtonAction()
 	{
@@ -208,6 +215,7 @@ public class Controller
 	
 	/**
 	 * Rotates the image clockwise
+	 * (Requirements 2.1.1/2.1.3)
 	 */
 	@FXML void rotateRightAction() 
 	{
@@ -218,6 +226,7 @@ public class Controller
 	
 	/**
 	 * Rotates the image counter-clockwise
+	 * (Requirements 2.1.2/2.1.3)
 	 */
 	@FXML void rotateLeftAction() 
 	{
@@ -228,6 +237,7 @@ public class Controller
 	
 	/**
 	 * Mirrors the image horizontally
+	 * (Requirements 2.2.1/2.2.3)
 	 */
 	@FXML void flipHorizontalAction() 
 	{
@@ -238,6 +248,7 @@ public class Controller
 	
 	/**
 	 * Mirrors the image vertically
+	 * (Requirements 2.2.2/2.2.3)
 	 */
 	@FXML void flipVerticalAction() 
 	{
@@ -248,6 +259,7 @@ public class Controller
 	
 	/**
 	 * Opens the crop tool
+	 * (Requirements 2.3.1/2.3.2)
 	 */
 	@FXML void cropAction() 
 	{
@@ -257,6 +269,7 @@ public class Controller
 	
 	/**
 	 * Commences the crop operation
+	 * (Requirements 2.3.4/2.3.5/2.3.6)
 	 */
 	@FXML void confirmCropAction()
 	{
@@ -273,6 +286,7 @@ public class Controller
 
 	/**
 	 * Closes the crop tool
+	 * (Requirements 2.3.6)
 	 */
 	@FXML void cancelCropAction()
 	{
@@ -282,6 +296,7 @@ public class Controller
 	
 	/**
 	 * Opens the resize tool
+	 * (Requirements 2.4.1/2.4.2)
 	 */
 	@FXML void resizeAction() 
 	{
@@ -291,7 +306,8 @@ public class Controller
 	}
 	
 	/**
-	 * Commences the resize operations
+	 * Commences the resize operation
+	 * (Requirement 2.4.4)
 	 */
 	@FXML void confirmResizeAction()
 	{
@@ -305,6 +321,7 @@ public class Controller
 	
 	/**
 	 * Closes the resize tool
+	 * (Requirement 2.4.3)
 	 */
 	@FXML void cancelResizeAction()
 	{
@@ -313,6 +330,7 @@ public class Controller
 	
 	/**
 	 * Opens the brightness/contrast tool
+	 * (Requirement 2.5.0)
 	 */
 	@FXML void editBrightnessAction() 
 	{
@@ -323,6 +341,7 @@ public class Controller
 	
 	/**
 	 * Commences the brightness/contrast adjustment
+	 * (Requirements 2.5.1/2.5.2)
 	 */
 	@FXML void confirmBrightnessAction()
 	{
@@ -381,6 +400,7 @@ public class Controller
 	/*
 	 * Provides a file chooser to allow the user to select an image file for viewing and editing.
 	 * Creates a new project and resets the GUI.
+	 * (Requirements 1.1.1/1.1.2)
 	 */
 	private void openFile()
 	{
@@ -417,6 +437,7 @@ public class Controller
 	/**
 	 * Loads the file into JIVE.
 	 * Creates a new Project and PhotoReel and updates the GUI.
+	 * (Requirement 1.4.5)
 	 * 
 	 * @param imageFile The file to load
 	 */
@@ -456,6 +477,8 @@ public class Controller
 	/**
 	 * Updates the GUI's labels and buttons as appropriate.
 	 * This should be called after any change is made to the Project or ImageViewer
+	 * (Requirements 1.3.0/1.4.3/1.4.4)
+	 * (Requirements 3.4.1/3.5.1)
 	 */
 	private void updateGUI()
 	{
@@ -541,6 +564,7 @@ public class Controller
 	 * resizeSliderListener updates the resizePercentLabel and the newDimensionsLabel
 	 * according to the value of the slider. It also enables or disables the
 	 * confirmResizeButton as appropriate.
+	 * (Requirement 2.4.5)
 	 */
 	ChangeListener<Number> resizeSliderListener = (observable, oldValue, newValue) -> 
 	{
@@ -563,6 +587,7 @@ public class Controller
 	 * This listener updates the brightnessSlider label and previews brightness changes.
 	 * The slider min and max values are 0 and 200, respectively. 100 is subtracted from
 	 * the value to effectively make the adjustment between -100 and 100.
+	 * (Requirement 2.5.3)
 	 */
 	ChangeListener<Number> brightnessSliderListener = (observable, oldValue, newValue) ->
 	{
@@ -581,6 +606,7 @@ public class Controller
 	
 	/**
 	 * This listener updates the contrastSlider label and previews contrast changes.
+	 * (Requirement 2.5.3)
 	 */
 	ChangeListener<Number> contrastSliderListener = (observable, oldValue, newValue) ->
 	{

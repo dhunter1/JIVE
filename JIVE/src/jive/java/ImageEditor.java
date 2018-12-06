@@ -22,6 +22,8 @@ public class ImageEditor
 	/**
 	 * Uses an AffineTransform to rotate a BufferedImage 90 degrees clockwise.
 	 * This function converts TYPE_BYTE_INDEXED images to TYPE_INT_ARGB
+	 * (Requirement 2.1.1)
+	 * 
 	 * @return A rotated BufferedImage
 	 */
 	public BufferedImage rotateRight(BufferedImage bufferedImage)
@@ -52,6 +54,8 @@ public class ImageEditor
 	/**
 	 * Uses an AffineTransform to rotate a BufferedImage 90 degrees counter-clockwise.
 	 * This function converts TYPE_BYTE_INDEXED images to TYPE_INT_ARGB
+	 * (Requirement 2.1.2)
+	 * 
 	 * @return A rotated BufferedImage
 	 */
 	public BufferedImage rotateLeft(BufferedImage bufferedImage)
@@ -81,6 +85,8 @@ public class ImageEditor
 	
 	/**
 	 * Mirrors a BufferedImage horizontally using an AffineTransform
+	 * (Requirement 2.2.1)
+	 * 
 	 * @return A horizontally flipped BufferedImage
 	 */
 	public BufferedImage flipHorizontal(BufferedImage bufferedImage)
@@ -96,6 +102,8 @@ public class ImageEditor
 	
 	/**
 	 * Mirrors a BufferedImage vertically using an AffineTransform
+	 * (Requirement 2.2.2)
+	 * 
 	 * @return A vertically flipped BufferedImage
 	 */
 	public BufferedImage flipVertical(BufferedImage bufferedImage)
@@ -110,6 +118,7 @@ public class ImageEditor
 
 	/**
 	 * Crops a BufferedImage using the specified coordinates and dimensions
+	 * (Requirement 2.3.5)
 	 * 
 	 * @param x - The X coordinate of the upper-left corner of the crop area
 	 * @param y - The Y coordinate of the upper-left corner of the crop area
@@ -125,6 +134,8 @@ public class ImageEditor
 	
 	/**
 	 * Resizes a BufferedImage by the given factor
+	 * (Requirement 2.4.1)
+	 * 
 	 * @param scaleFactor - The percent to scale by, between 0.0 and 1.0
 	 * @return A resized BufferedImage
 	 */
@@ -159,6 +170,7 @@ public class ImageEditor
 	 * <br><br>
 	 * 
 	 * Contrast is affected by scaleFactor and brightness is affected by offset.
+	 * (Requirements 2.5.1/2.5.2)
 	 * 
 	 * @param bufferedImage - the image to adjust
 	 * @param brightnessAdjustment - the offset to apply to each pixel (-100.0 to 100.0)
