@@ -30,7 +30,7 @@ import javax.imageio.ImageIO;
  */
 public class Project
 {
-	private final List<String> COMPATIBLE_FORMATS = Arrays.asList(".jpg", ".png", ".bmp", ".gif");
+	private final List<String> COMPATIBLE_FORMATS = Arrays.asList(".jpg", ".jpeg", ".png", ".bmp", ".gif");
 
 	private ImageEditor imageEditor;
 	private BufferedImage bufferedImage;
@@ -95,7 +95,7 @@ public class Project
 		
 		try
 		{
-			if (hasAlphaChannel && (newFileExtension.equals("jpg") | newFileExtension.equals("bmp")))
+			if (hasAlphaChannel && (newFileExtension.equals("jpg") | newFileExtension.equals("bmp") | newFileExtension.equals("jpeg")))
 			{				
 				int width = bufferedImage.getWidth();
 				int height = bufferedImage.getHeight();
@@ -366,7 +366,7 @@ public class Project
 	{
 		String fileName = file.getName();
 		int extensionIndex = fileName.lastIndexOf(".");
-		String extension = fileName.substring(extensionIndex + 1);
+		String extension = fileName.substring(extensionIndex + 1).toLowerCase();
 		return extension;
 	}
 }

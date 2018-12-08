@@ -38,7 +38,7 @@ import javafx.stage.Stage;
  */
 public class Controller
 {	
-	private final List<String> COMPATIBLE_FORMATS = Arrays.asList("*.jpg", "*.png", "*.bmp", "*.gif");
+	private final List<String> COMPATIBLE_FORMATS = Arrays.asList("*.jpg", "*.jpeg", "*.png", "*.bmp", "*.gif");
 	
 	Stage stage;
 	ImageViewer imageViewer;
@@ -422,7 +422,7 @@ public class Controller
 			//Users can enter non-image files manually, so additional validation is done here
 			String fileName = imageFile.getName();
 			int extensionIndex = fileName.lastIndexOf(".");
-			String extension = fileName.substring(extensionIndex + 1);
+			String extension = fileName.substring(extensionIndex + 1).toLowerCase();
 			
 			if (!(COMPATIBLE_FORMATS.contains("*." + extension)))
 			{

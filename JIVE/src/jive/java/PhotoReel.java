@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class PhotoReel
 {
-	private final List<String> COMPATIBLE_FORMATS = Arrays.asList(".jpg", ".png", ".bmp", ".gif");
+	private final List<String> COMPATIBLE_FORMATS = Arrays.asList(".jpg", ".jpeg", ".png", ".bmp", ".gif");
 	private File[] directoryImages;
 	private int currentPosition;
 	
@@ -32,7 +32,7 @@ public class PhotoReel
 		
 		directoryImages = parentDirectory.listFiles(pathname ->
 		{
-			String fileName = pathname.getName();
+			String fileName = pathname.getName().toLowerCase();
 			for (String format : COMPATIBLE_FORMATS)
 			{
 				if (fileName.endsWith(format))
